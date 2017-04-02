@@ -136,7 +136,7 @@ self.webView.jsHandlers = @[TOLOGIN,TOPAY,TOYATI];
  *  @param jsMethod JS方法名称
  *  @param handler  回调block
  */
-- (void)callJS:(nonnull NSString *)jsMethodName handler:(nullable void(^)(__nullable id response))handler;
+- (void)callJavaScript:(nonnull NSString *)jsMethodName handler:(nullable void(^)(__nullable id response))handler;
 
 //如果前端人员不知道OC调用js 的方法怎么写 可参考如下代码 😝
 function configer() {
