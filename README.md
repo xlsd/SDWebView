@@ -138,5 +138,9 @@ self.webView.jsHandlers = @[TOLOGIN,TOPAY,TOYATI];
  */
 - (void)callJS:(nonnull NSString *)jsMethodName handler:(nullable void(^)(__nullable id response))handler;
 
-
+//如果前端人员不知道OC调用js 的方法怎么写 可参考如下代码 😝
+function configer() {
+    reture {'c':"100"}
+}
+在callJS方法中直接让前端人员返回一个json 或者 其他返回值 OC即可在handler这个blcok 中获取 这个返回值
 ```
