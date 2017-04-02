@@ -8,38 +8,47 @@
 
 #import <WebKit/WebKit.h>
 
-@protocol SDWebViewDelegate <NSObject>
+//@protocol SDWebViewDelegate <NSObject>
+//
+//@optional
+//
+///**
+// 获取从H5页面传递过来的参数
+//
+// @param userContentController
+// @param message 参数列表
+// */
+//- (void)getParameterFromJS:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message;
+//
+///**
+// 页面加载完成后调用
+//
+// @param webView 
+// @param navigation
+// */
+//- (void)webView:(WKWebView *)webView didLoadFinish:(WKNavigation *)navigation;
+//
+//
+///**
+// webView跳转时执行的方法
+//
+// @param webView
+// @param navigationAction
+// @param decisionHandler 
+// */
+//- (void)webView:(WKWebView *)webView decideForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler;
+//
+///**
+// 页面开始加载就调用
+//
+// @param webView
+// @param navigation
+// */
+//- (void)webView:(WKWebView *)webView didStartLoadNavigation:(WKNavigation *)navigation;
+//@end
 
-@optional
 
-/**
- 获取从H5页面传递过来的参数
-
- @param userContentController
- @param message 参数列表
- */
-- (void)getParameterFromJS:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message;
-
-/**
- 页面一开始加载就调用
-
- @param webView 
- @param navigation
- */
-- (void)webView:(WKWebView *)webView didLoadFinish:(WKNavigation *)navigation;
-
-
-/**
- 页面开始加载就调用
-
- @param webView
- @param navigation
- */
-- (void)webView:(WKWebView *)webView didStartLoadNavigation:(WKNavigation *)navigation;
-@end
-
-
-@interface SDWebView : WKWebView
+@interface SDWebView : WKWebView<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler>
 
 /**
  需要加载的urlStr
@@ -80,7 +89,7 @@
 /**
  获取交互的参数代理
  */
-@property (nonatomic, weak) id<SDWebViewDelegate> delegate;
+@property (nonatomic, assign) id<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler> webDelegate;
 
 /**
  根据URL初始化
@@ -111,14 +120,14 @@
  
  @param cookieName 域名
  */
-- (void)removeCookieWithHostName:(NSString *)hostName;
+//- (void)removeCookieWithHostName:(NSString *)hostName;
 
 /**
  *  调用JS方法（无返回值）
  *
  *  @param jsMethod JS方法名称
  */
-- (void)callJS:(nonnull NSString *)jsMethodName;
+- (void)callJavaScript:(nonnull NSString *)jsMethodName;
 
 /**
  *  调用JS方法（可处理返回值）
@@ -126,6 +135,6 @@
  *  @param jsMethod JS方法名称
  *  @param handler  回调block
  */
-- (void)callJS:(nonnull NSString *)jsMethodName handler:(nullable void(^)(__nullable id response))handler;
+- (void)callJavaScript:(nonnull NSString *)jsMethodName handler:(nullable void(^)(__nullable id response))handler;
 
 @end

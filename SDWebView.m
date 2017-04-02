@@ -9,9 +9,9 @@
 #import "SDWebView.h"
 #import <Foundation/Foundation.h>
 
-static NSString *MEIQIA = @"meiqia";
+//static NSString *MEIQIA = @"meiqia";
 
-@interface SDWebView ()<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler>
+@interface SDWebView ()
 
 @end
 
@@ -36,6 +36,7 @@ static NSString *MEIQIA = @"meiqia";
     configer.preferences = [[WKPreferences alloc] init];
     configer.preferences.javaScriptEnabled = YES;
     configer.preferences.javaScriptCanOpenWindowsAutomatically = NO;
+    configer.allowsInlineMediaPlayback = YES;
     self = [super initWithFrame:frame configuration:configer];
     [self setDefaultValue];
     return self;
@@ -77,8 +78,8 @@ static NSString *MEIQIA = @"meiqia";
 
 #pragma mark - js调用原生方法 可在此方法中获得传递回来的参数
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
-    if ([self.delegate respondsToSelector:@selector(getParameterFromJS:didReceiveScriptMessage:)]) {
-        [self.delegate getParameterFromJS:userContentController didReceiveScriptMessage:message];
+    if(self.webDelegate !=nil && [self.webDelegate respondsToSelector:@selector(userContentController:didReceiveScriptMessage:)]){
+        [self.webDelegate userContentController:userContentController didReceiveScriptMessage:message];
     }
 }
 
@@ -97,15 +98,18 @@ static NSString *MEIQIA = @"meiqia";
             NSLog(@"%@",HTMLsource);
         }];
     }
-    if ([self.delegate respondsToSelector:@selector(webView:didLoadFinish:)]) {
-        [self.delegate webView:webView didLoadFinish:navigation];
+    if (![self.webDelegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
+        return;
+    }
+    if(self.webDelegate !=nil ){
+        [self.webDelegate webView:webView didFinishNavigation:navigation];
     }
 }
 
 #pragma mark - 页面开始加载就调用
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
-    if ([self.delegate respondsToSelector:@selector(webView:didStartLoadNavigation:)]) {
-        [self.delegate webView:webView didStartLoadNavigation:navigation];
+    if (self.webDelegate != nil && [self.webDelegate respondsToSelector:@selector(webView:didStartProvisionalNavigation:)]) {
+        [self.webDelegate webView:webView didStartProvisionalNavigation:navigation];
     }
 }
 
@@ -114,14 +118,9 @@ static NSString *MEIQIA = @"meiqia";
     if (_displayURL) {
         NSString *URLStr = navigationAction.request.URL.absoluteString;
         NSLog(@"-----------%@",URLStr);
-        //在客服页面隐藏导航栏
-        if ([URLStr rangeOfString:MEIQIA].location != NSNotFound) {
-            self.frame = CGRectMake(0, -64, ScreenWidth, ScreenHeight);
-        } else {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                self.frame = CGRectMake(0, 0, ScreenWidth, ScreenHeight - 64);});
+        if (self.webDelegate != nil && [self.webDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)]) {
+            [self.webDelegate webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
         }
-        decisionHandler(WKNavigationActionPolicyAllow);
     }
 }
 
@@ -139,7 +138,7 @@ static NSString *MEIQIA = @"meiqia";
 - (UIProgressView *)progressView {
     if(!_progressView) {
         _progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, 0)];
-        _progressView.tintColor = [UIColor orangeColor];
+        _progressView.tintColor = [UIColor colorWithHexString:ThemeColor alpha:1.0];
         _progressView.trackTintColor = [UIColor whiteColor];
         [self addSubview:_progressView];
     }
@@ -168,19 +167,20 @@ static NSString *MEIQIA = @"meiqia";
                          for (WKWebsiteDataRecord *record  in records) {
                              if ( [record.displayName containsString:hostName]) {
                                  [[WKWebsiteDataStore defaultDataStore]removeDataOfTypes:record.dataTypes
-                                                                          forDataRecords:@[record] completionHandler:^{
-                                                                              NSLog(@"Cookies for %@ deleted successfully",record.displayName);
+                                                                          forDataRecords:@[record]
+                                                                       completionHandler:^{
+                                                                            NSLog(@"Cookies for %@ deleted successfully",record.displayName);
                                                                           }];
                              }
                          }
                      }];
 }
 
-- (void)callJS:(NSString *)jsMethodName {
-    [self callJS:jsMethodName handler:nil];
+- (void)callJavaScript:(NSString *)jsMethodName {
+    [self callJavaScript:jsMethodName handler:nil];
 }
 
-- (void)callJS:(NSString *)jsMethodName handler:(void (^)(id _Nullable))handler {
+- (void)callJavaScript:(NSString *)jsMethodName handler:(void (^)(id _Nullable))handler {
     
     NSLog(@"call js:%@",jsMethodName);
     [self evaluateJavaScript:jsMethodName completionHandler:^(id _Nullable response, NSError * _Nullable error) {
@@ -188,6 +188,9 @@ static NSString *MEIQIA = @"meiqia";
             handler(response);
         }
     }];
+}
+- (void)dealloc {
+    [self removeCookies];
 }
 
 @end
