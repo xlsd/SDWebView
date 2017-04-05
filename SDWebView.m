@@ -144,6 +144,7 @@
             [self.webDelegate webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
         }
     }
+    decisionHandler(WKNavigationActionPolicyAllow);
 }
 
 #pragma mark - 移除jsHandler
