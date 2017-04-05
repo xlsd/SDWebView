@@ -8,46 +8,6 @@
 
 #import <WebKit/WebKit.h>
 
-//@protocol SDWebViewDelegate <NSObject>
-//
-//@optional
-//
-///**
-// 获取从H5页面传递过来的参数
-//
-// @param userContentController
-// @param message 参数列表
-// */
-//- (void)getParameterFromJS:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message;
-//
-///**
-// 页面加载完成后调用
-//
-// @param webView 
-// @param navigation
-// */
-//- (void)webView:(WKWebView *)webView didLoadFinish:(WKNavigation *)navigation;
-//
-//
-///**
-// webView跳转时执行的方法
-//
-// @param webView
-// @param navigationAction
-// @param decisionHandler 
-// */
-//- (void)webView:(WKWebView *)webView decideForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler;
-//
-///**
-// 页面开始加载就调用
-//
-// @param webView
-// @param navigation
-// */
-//- (void)webView:(WKWebView *)webView didStartLoadNavigation:(WKNavigation *)navigation;
-//@end
-
-
 @interface SDWebView : WKWebView<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler>
 
 /**
@@ -55,6 +15,10 @@
  */
 @property (nonatomic, copy) NSString *URLString;
 
+/**
+ web页面中的图片链接数组
+ */
+@property (nonatomic, strong) NSMutableArray *imgSrcArray;
 /**
  进度条
  */

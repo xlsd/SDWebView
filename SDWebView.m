@@ -8,15 +8,18 @@
 
 #import "SDWebView.h"
 #import <Foundation/Foundation.h>
+#import "SDPhotoBrowserd.h"
 
 //static NSString *MEIQIA = @"meiqia";
 
-@interface SDWebView ()
-
+@interface SDWebView ()<SDPhotoBrowserDelegate>
+@property (nonatomic, strong) WKUserScript *userScript;
 @end
 
 
-@implementation SDWebView
+@implementation SDWebView {
+    NSString *_imgSrc;
+}
 
 - (instancetype)initWithURLString:(NSString *)urlString {
     self = [super init];
@@ -37,6 +40,7 @@
     configer.preferences.javaScriptEnabled = YES;
     configer.preferences.javaScriptCanOpenWindowsAutomatically = NO;
     configer.allowsInlineMediaPlayback = YES;
+    [configer.userContentController addUserScript:self.userScript];
     self = [super initWithFrame:frame configuration:configer];
     [self setDefaultValue];
     return self;
@@ -84,7 +88,19 @@
 }
 
 #pragma mark - 检查cookie及页面HTML元素
+//页面加载完成后调用
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
+    //获取图片数组
+    [webView evaluateJavaScript:@"getImages()" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
+        _imgSrcArray = [NSMutableArray arrayWithArray:[result componentsSeparatedByString:@"+"]];
+        if (_imgSrcArray.count >= 2) {
+            [_imgSrcArray removeLastObject];
+        }
+        NSLog(@"%@",_imgSrcArray);
+    }];
+    
+    [webView evaluateJavaScript:@"registerImageClickAction();" completionHandler:^(id _Nullable result, NSError * _Nullable error) {}];
+    
     if (_displayCookies) {
         NSHTTPCookie *cookie;
         NSHTTPCookieStorage *cookieJar = [NSHTTPCookieStorage sharedHTTPCookieStorage];
@@ -98,7 +114,7 @@
             NSLog(@"%@",HTMLsource);
         }];
     }
-    if (![self.webDelegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
+    if (![self.webDelegate respondsToSelector:@selector(webView:didFinishNavigation:)]) {
         return;
     }
     if(self.webDelegate !=nil ){
@@ -115,9 +131,15 @@
 
 #pragma mark - 导航每次跳转调用跳转
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+    //预览图片
+    if ([navigationAction.request.URL.scheme isEqualToString:@"image-preview"]) {
+        NSString* path = [navigationAction.request.URL.absoluteString substringFromIndex:[@"image-preview:" length]];
+        path = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        _imgSrc = path;
+        [self previewPicture];
+    }
     if (_displayURL) {
-        NSString *URLStr = navigationAction.request.URL.absoluteString;
-        NSLog(@"-----------%@",URLStr);
+        NSLog(@"-----------%@",navigationAction.request.URL.absoluteString);
         if (self.webDelegate != nil && [self.webDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)]) {
             [self.webDelegate webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
         }
@@ -193,4 +215,60 @@
     [self removeCookies];
 }
 
+// 预览图片
+- (void)previewPicture {
+    NSInteger currentIndex = 0;
+    for (NSInteger i = 0; i < self.imgSrcArray.count; i++) {
+        NSString *path = self.imgSrcArray[i];
+        if ([path isEqualToString:_imgSrc]) {
+            currentIndex = i;
+        }
+    }
+    SDPhotoBrowserd *browser = [[SDPhotoBrowserd alloc] init];
+    browser.imageCount = self.imgSrcArray.count; // 图片总数
+    browser.currentImageIndex = currentIndex;
+    browser.sourceImagesContainerView = self.superview; // 原图的父控件
+    browser.delegate = self;
+    [browser show];
+}
+
+//- (UIImage *)photoBrowser:(SDPhotoBrowser *)browser placeholderImageForIndex:(NSInteger)index {
+//    UIImage *img = [UIImage createImageWithColor:[UIColor colorWithHexString:ThemeColor alpha:0.5]];
+//    UIImageView *imgView = [[UIImageView alloc] initWithImage:img];
+//    imgView.frame = CGRectMake(0, 0, ScreenWidth, 200);
+//    imgView.center = self.center;
+//    return imgView.image;
+//}
+
+
+// 返回高质量图片的url
+- (NSURL *)photoBrowser:(SDPhotoBrowserd *)browser highQualityImageURLForIndex:(NSInteger)index {
+    
+    return [NSURL URLWithString:self.imgSrcArray[index]];
+    
+}
+
+- (WKUserScript *)userScript {
+    if (!_userScript) {
+        static  NSString * const jsGetImages =
+        @"function getImages(){\
+        var objs = document.getElementsByTagName(\"img\");\
+        var imgScr = '';\
+        for(var i=0;i<objs.length;i++){\
+        imgScr = imgScr + objs[i].src + '+';\
+        };\
+        return imgScr;\
+        };function registerImageClickAction(){\
+        var imgs=document.getElementsByTagName('img');\
+        var length=imgs.length;\
+        for(var i=0;i<length;i++){\
+        img=imgs[i];\
+        img.onclick=function(){\
+        window.location.href='image-preview:'+this.src}\
+        }\
+        }";
+        _userScript = [[WKUserScript alloc] initWithSource:jsGetImages injectionTime:WKUserScriptInjectionTimeAtDocumentEnd forMainFrameOnly:YES];
+    }
+    return _userScript;
+}
 @end
