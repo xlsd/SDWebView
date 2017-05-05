@@ -25,6 +25,6 @@ Pod::Spec.new do |s|
   s.platform     = :ios
   s.platform     = :ios, "8.0"
   s.source       = { :git => "https://github.com/giveMeHug/SDWebView.git", :tag => s.version }
-  s.source_files  = "SDWebViewDemo/WebView.{h,m}"
+  s.source_files  = "SDWebViewDemo/WebView/.{h,m}"
 
 end
