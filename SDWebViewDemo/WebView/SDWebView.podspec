@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.license      = { :type => "MIT", :file => "LICENSE" }
   s.author             = { "xuelin" => "413890968@qq.com" }
   s.source       = { :git => "https://github.com/giveMeHug/SDWebView.git", :tag => s.version }
-  s.source_files  = "SDWebView/SDWebViewDemo/WebView//*.{h,m}"
+  s.source_files  = "SDWebViewDemo/WebView//*.{h,m}"
   s.dependency  = 'SDPhotoBrowserd'
 
 end
