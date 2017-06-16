@@ -55,11 +55,11 @@
     indexLabel.textAlignment = NSTextAlignmentCenter;
     indexLabel.textColor = [UIColor whiteColor];
     indexLabel.font = [UIFont boldSystemFontOfSize:20];
-    indexLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-    indexLabel.layer.cornerRadius = indexLabel.bounds.size.height * 0.5;
-    indexLabel.clipsToBounds = YES;
     if (self.imageCount > 1) {
         indexLabel.text = [NSString stringWithFormat:@"1/%ld", (long)self.imageCount];
+        indexLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+        indexLabel.layer.cornerRadius = indexLabel.bounds.size.height * 0.5;
+        indexLabel.clipsToBounds = YES;
     }
     _indexLabel = indexLabel;
     [self addSubview:indexLabel];

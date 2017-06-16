@@ -23,6 +23,10 @@
     SDWebView *webView = [[SDWebView alloc] initWithFrame:self.view.bounds];
     [webView loadLocalHTMLWithFileName:@"source"];
     
+    
+    //  Example like this, you need set ATS allow load Yes.
+//    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]]];
+    
     [self.view addSubview:webView];
     
 }

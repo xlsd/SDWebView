@@ -233,7 +233,7 @@
     [browser show];
 }
 
-//- (UIImage *)photoBrowser:(SDPhotoBrowser *)browser placeholderImageForIndex:(NSInteger)index {
+//- (UIImage *)photoBrowser:(SDPhotoBrowserd *)browser placeholderImageForIndex:(NSInteger)index {
 //    UIImage *img = [UIImage createImageWithColor:[UIColor colorWithHexString:ThemeColor alpha:0.5]];
 //    UIImageView *imgView = [[UIImageView alloc] initWithImage:img];
 //    imgView.frame = CGRectMake(0, 0, ScreenWidth, 200);
