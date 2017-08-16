@@ -21,10 +21,9 @@
 
 
 @implementation SDPhotoBrowserd {
-    UIScrollView *_scrollView;
+    UIScrollView *_scrollView;  //  滚动视图
     BOOL _hasShowedFistView;
     UILabel *_indexLabel;
-    UIButton *_saveButton;
     UIActivityIndicatorView *_indicatorView;
     BOOL _willDisappear;
 }
@@ -195,14 +194,18 @@
     if (!currentImageView.image) { // 防止 因imageview的image加载失败 导致 崩溃
         h = self.bounds.size.height;
     }
-    
     tempView.bounds = CGRectMake(0, 0, self.bounds.size.width, h);
     tempView.center = self.center;
-    
     [self addSubview:tempView];
-    
-    _saveButton.hidden = YES;
-    
+//    [UIView animateWithDuration:2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut animations:^{
+//        [tempView.layer setValue:@(1.01) forKeyPath:@"transform.scale"];
+//    }completion:^(BOOL finished) {
+//        [UIView animateWithDuration:2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseInOut animations:^{
+//            [tempView.layer setValue:@(1.0) forKeyPath:@"transform.scale"];
+//        }completion:^(BOOL finished) {
+//            tempView.clipsToBounds = YES;
+//        }];
+//    }];
     if (self.recordView == self.scourceView) {
         [UIView animateWithDuration:SDPhotoBrowserShowImageAnimationDuration animations:^{
             self.alpha = 0;
@@ -258,7 +261,6 @@
         [self showFirstImage];
     }
     _indexLabel.center = CGPointMake(self.bounds.size.width * 0.5, 35);
-    _saveButton.frame = CGRectMake(30, self.bounds.size.height - 70, 50, 25);
 }
 
 - (void)show {
@@ -371,6 +373,7 @@
     }
     return _scourceView;
 }
+//  MARK: - 长按弹出的两个按钮视图
 - (UIVisualEffectView *)effectView {
     if (!_effectView) {
         _effectView = [[UIVisualEffectView alloc] initWithEffect: [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];

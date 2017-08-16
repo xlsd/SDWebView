@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-@class SDButton, SDPhotoBrowserd;
 
+@class SDPhotoBrowserd;
 @protocol SDPhotoBrowserDelegate <NSObject>
-
 @optional
 - (UIImage *)photoBrowser:(SDPhotoBrowserd *)browser placeholderImageForIndex:(NSInteger)index;
 

@@ -10,17 +10,23 @@
 #import <Foundation/Foundation.h>
 #import "SDPhotoBrowserd.h"
 
-//static NSString *MEIQIA = @"meiqia";
+@interface SDWebView ()<SDPhotoBrowserDelegate> {
+    BOOL _displayHTML;  //  显示页面元素
+    BOOL _displayCookies;// 显示页面Cookies
+    BOOL _displayURL;// 显示即将调转的URL
+}
 
-@interface SDWebView ()<SDPhotoBrowserDelegate>
+//  交互对象，使用它个页面注入JS代码给能够获取到的页面图片添加点击事件
 @property (nonatomic, strong) WKUserScript *userScript;
+
 @end
 
 
 @implementation SDWebView {
-    NSString *_imgSrc;
+    NSString *_imgSrc;//  预览图片的URL路径
 }
 
+//  MARK: - init
 - (instancetype)initWithURLString:(NSString *)urlString {
     self = [super init];
     [self setDefaultValue];
@@ -52,7 +58,7 @@
 }
 
 - (void)setDefaultValue {
-    _displayHTML = NO;
+    _displayHTML = YES;
     _displayCookies = NO;
     _displayURL = YES;
     self.UIDelegate = self;
@@ -60,6 +66,7 @@
     self.scrollView.showsVerticalScrollIndicator = NO;
 }
 
+//  MARK: - 加载本地URL
 - (void)loadLocalHTMLWithFileName:(nonnull NSString *)htmlName {
     
     NSString *path = [[NSBundle mainBundle] bundlePath];
@@ -73,11 +80,12 @@
     [self loadHTMLString:htmlCont baseURL:baseURL];
 }
 
+
 - (void)setJsHandlers:(NSArray<NSString *> *)jsHandlers {
     _jsHandlers = jsHandlers;
-    for (NSString *handlerName in jsHandlers) {
-        [self.configuration.userContentController addScriptMessageHandler:self name:handlerName];
-    }
+    [jsHandlers enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+         [self.configuration.userContentController addScriptMessageHandler:self name:obj];
+    }];
 }
 
 #pragma mark - js调用原生方法 可在此方法中获得传递回来的参数
@@ -117,7 +125,7 @@
     if (![self.webDelegate respondsToSelector:@selector(webView:didFinishNavigation:)]) {
         return;
     }
-    if(self.webDelegate !=nil ){
+    if([self.webDelegate respondsToSelector:@selector(webView:didFinishNavigation:)]){
         [self.webDelegate webView:webView didFinishNavigation:navigation];
     }
 }
@@ -160,8 +168,8 @@
 #pragma mark - 进度条
 - (UIProgressView *)progressView {
     if(!_progressView) {
-        _progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0, ScreenWidth, 0)];
-        _progressView.tintColor = [UIColor colorWithHexString:ThemeColor alpha:1.0];
+        _progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+        _progressView.tintColor = [UIColor redColor];
         _progressView.trackTintColor = [UIColor whiteColor];
         [self addSubview:_progressView];
     }
@@ -199,6 +207,7 @@
                      }];
 }
 
+//  MARK: - 调用js方法
 - (void)callJavaScript:(NSString *)jsMethodName {
     [self callJavaScript:jsMethodName handler:nil];
 }
@@ -212,8 +221,10 @@
         }
     }];
 }
+
 - (void)dealloc {
-    [self removeCookies];
+    //  这里清除或者不清除cookies 按照业务要求
+//    [self removeCookies];
 }
 
 // 预览图片
@@ -233,7 +244,7 @@
     [browser show];
 }
 
-//- (UIImage *)photoBrowser:(SDPhotoBrowserd *)browser placeholderImageForIndex:(NSInteger)index {
+//- (UIImage *)photoBrowser:(SDPhotoBrowser *)browser placeholderImageForIndex:(NSInteger)index {
 //    UIImage *img = [UIImage createImageWithColor:[UIColor colorWithHexString:ThemeColor alpha:0.5]];
 //    UIImageView *imgView = [[UIImageView alloc] initWithImage:img];
 //    imgView.frame = CGRectMake(0, 0, ScreenWidth, 200);

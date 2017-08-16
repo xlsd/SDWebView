@@ -11,8 +11,6 @@
 		9A27F4C71E947BEE008FE993 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A27F4C61E947BEE008FE993 /* AppDelegate.m */; };
 		9A27F4CF1E947BEE008FE993 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A27F4CE1E947BEE008FE993 /* Assets.xcassets */; };
 		9A27F4D21E947BEE008FE993 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9A27F4D01E947BEE008FE993 /* LaunchScreen.storyboard */; };
-		9A27F4DD1E947C5F008FE993 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 9A27F4DA1E947C5F008FE993 /* README.md */; };
-		9A27F4DE1E947C5F008FE993 /* SDWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A27F4DC1E947C5F008FE993 /* SDWebView.m */; };
 		9A27F4E71E947C7A008FE993 /* SDImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A27F4E21E947C7A008FE993 /* SDImageView.m */; };
 		9A27F4E81E947C7A008FE993 /* SDLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A27F4E41E947C7A008FE993 /* SDLoadingView.m */; };
 		9A27F4E91E947C7A008FE993 /* SDPhotoBrowserd.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A27F4E61E947C7A008FE993 /* SDPhotoBrowserd.m */; };
@@ -20,6 +18,7 @@
 		9A5C48941E95318500DF8CA6 /* SDWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A5C48931E95318500DF8CA6 /* SDWebViewController.m */; };
 		9A5C48961E95359600DF8CA6 /* source.html in Resources */ = {isa = PBXBuildFile; fileRef = 9A5C48951E95359600DF8CA6 /* source.html */; };
 		A5D45CC9DB78A2C1B5B8EF0F /* libPods-SDWebViewDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CA381AE1C5049CC2969DBC52 /* libPods-SDWebViewDemo.a */; };
+		E14C478F1F4444F20099DC27 /* SDWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = E14C478D1F44446F0099DC27 /* SDWebView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,9 +31,6 @@
 		9A27F4CE1E947BEE008FE993 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9A27F4D11E947BEE008FE993 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9A27F4D31E947BEE008FE993 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9A27F4DA1E947C5F008FE993 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		9A27F4DB1E947C5F008FE993 /* SDWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDWebView.h; sourceTree = "<group>"; };
-		9A27F4DC1E947C5F008FE993 /* SDWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDWebView.m; sourceTree = "<group>"; };
 		9A27F4E01E947C7A008FE993 /* SDBrowserdConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDBrowserdConfig.h; sourceTree = "<group>"; };
 		9A27F4E11E947C7A008FE993 /* SDImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDImageView.h; sourceTree = "<group>"; };
 		9A27F4E21E947C7A008FE993 /* SDImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDImageView.m; sourceTree = "<group>"; };
@@ -47,6 +43,11 @@
 		9A5C48931E95318500DF8CA6 /* SDWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDWebViewController.m; sourceTree = "<group>"; };
 		9A5C48951E95359600DF8CA6 /* source.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = source.html; sourceTree = "<group>"; };
 		CA381AE1C5049CC2969DBC52 /* libPods-SDWebViewDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SDWebViewDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E14C47851F4443B00099DC27 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		E14C47891F4443B00099DC27 /* SDWebView.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = SDWebView.podspec; sourceTree = "<group>"; };
+		E14C478C1F44446F0099DC27 /* SDWebView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDWebView.h; sourceTree = "<group>"; };
+		E14C478D1F44446F0099DC27 /* SDWebView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SDWebView.m; sourceTree = "<group>"; };
+		E14C478E1F4444DC0099DC27 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,8 +91,8 @@
 		9A27F4C11E947BEE008FE993 /* SDWebViewDemo */ = {
 			isa = PBXGroup;
 			children = (
+				E14C478A1F44446F0099DC27 /* SDWebView */,
 				9A27F4DF1E947C7A008FE993 /* SDPhotoBrowserd */,
-				9A27F4D91E947C5F008FE993 /* WebView */,
 				9A27F4C51E947BEE008FE993 /* AppDelegate.h */,
 				9A27F4C61E947BEE008FE993 /* AppDelegate.m */,
 				9A5C48921E95318500DF8CA6 /* SDWebViewController.h */,
@@ -107,21 +108,14 @@
 		9A27F4C21E947BEE008FE993 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E14C478E1F4444DC0099DC27 /* README.md */,
+				E14C47851F4443B00099DC27 /* LICENSE */,
 				9A5C48951E95359600DF8CA6 /* source.html */,
 				9A5C48901E95247900DF8CA6 /* SDPhotoBrowserd.gif */,
 				9A27F4C31E947BEE008FE993 /* main.m */,
+				E14C47891F4443B00099DC27 /* SDWebView.podspec */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		9A27F4D91E947C5F008FE993 /* WebView */ = {
-			isa = PBXGroup;
-			children = (
-				9A27F4DA1E947C5F008FE993 /* README.md */,
-				9A27F4DB1E947C5F008FE993 /* SDWebView.h */,
-				9A27F4DC1E947C5F008FE993 /* SDWebView.m */,
-			);
-			path = WebView;
 			sourceTree = "<group>";
 		};
 		9A27F4DF1E947C7A008FE993 /* SDPhotoBrowserd */ = {
@@ -145,6 +139,15 @@
 				37982A0A24F48B761C65AA2E /* Pods-SDWebViewDemo.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		E14C478A1F44446F0099DC27 /* SDWebView */ = {
+			isa = PBXGroup;
+			children = (
+				E14C478C1F44446F0099DC27 /* SDWebView.h */,
+				E14C478D1F44446F0099DC27 /* SDWebView.m */,
+			);
+			path = SDWebView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -274,11 +277,10 @@
 				9A27F4E81E947C7A008FE993 /* SDLoadingView.m in Sources */,
 				9A27F4E71E947C7A008FE993 /* SDImageView.m in Sources */,
 				9A27F4C71E947BEE008FE993 /* AppDelegate.m in Sources */,
-				9A27F4DD1E947C5F008FE993 /* README.md in Sources */,
 				9A27F4E91E947C7A008FE993 /* SDPhotoBrowserd.m in Sources */,
 				9A27F4C41E947BEE008FE993 /* main.m in Sources */,
+				E14C478F1F4444F20099DC27 /* SDWebView.m in Sources */,
 				9A5C48941E95318500DF8CA6 /* SDWebViewController.m in Sources */,
-				9A27F4DE1E947C5F008FE993 /* SDWebView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
