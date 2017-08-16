@@ -41,40 +41,37 @@
 - (void)didMoveToSuperview {
     [self setupScrollView];
     
-    [self setupToolbars];
+    [self setupCountLabel];
 }
 
 - (void)dealloc {
     [[UIApplication sharedApplication].keyWindow removeObserver:self forKeyPath:@"frame"];
 }
 
-- (void)setupToolbars {
+- (void)setupCountLabel {
     // 1. 序标
-    UILabel *indexLabel = [[UILabel alloc] init];
-    indexLabel.bounds = CGRectMake(0, 0, 80, 30);
-    indexLabel.textAlignment = NSTextAlignmentCenter;
-    indexLabel.textColor = [UIColor whiteColor];
-    indexLabel.font = [UIFont boldSystemFontOfSize:20];
     if (self.imageCount > 1) {
-        indexLabel.text = [NSString stringWithFormat:@"1/%ld", (long)self.imageCount];
+        UILabel *indexLabel = [[UILabel alloc] init];
+        indexLabel.bounds = CGRectMake(0, 0, 80, 30);
+        indexLabel.textAlignment = NSTextAlignmentCenter;
+        indexLabel.textColor = [UIColor whiteColor];
+        indexLabel.font = [UIFont boldSystemFontOfSize:20];
         indexLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
         indexLabel.layer.cornerRadius = indexLabel.bounds.size.height * 0.5;
         indexLabel.clipsToBounds = YES;
+        indexLabel.text = [NSString stringWithFormat:@"1/%ld", (long)self.imageCount];
+        _indexLabel = indexLabel;
+        [self addSubview:indexLabel];
     }
-    _indexLabel = indexLabel;
-    [self addSubview:indexLabel];
-    
 }
 - (void)mune {
-   
-    [UIView animateWithDuration:0.3 animations:^{
-        self.effectView.transform = CGAffineTransformIdentity;
-    } completion:^(BOOL finished) {
-        [self addSubview:self.effectView];
-    }];
+    [self addSubview:self.effectView];
+    [UIView animateWithDuration:SDPhotoBrowserShowImageAnimationDuration delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0.5 options:UIViewAnimationOptionLayoutSubviews animations:^{
+        self.effectView.transform = CGAffineTransformMakeTranslation(0, -self.effectView.frame.size.height);
+    } completion:^(BOOL finished) {}];
 }
 - (void)cancelAction {
-    [UIView animateWithDuration:0.3 animations:^{
+    [UIView animateWithDuration:SDPhotoBrowserShowImageAnimationDuration animations:^{
         self.effectView.transform = CGAffineTransformMakeTranslation(0, 88);
     } completion:^(BOOL finished) {
         [self.effectView removeFromSuperview];
@@ -139,7 +136,6 @@
         
         // 单击图片
         UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(photoClick:)];
-        
         // 双击放大图片
         UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageViewDoubleTaped:)];
         doubleTap.numberOfTapsRequired = 2;
@@ -208,7 +204,11 @@
     _saveButton.hidden = YES;
     
     if (self.recordView == self.scourceView) {
-        [self removeFromSuperview];
+        [UIView animateWithDuration:SDPhotoBrowserShowImageAnimationDuration animations:^{
+            self.alpha = 0;
+        } completion:^(BOOL finished) {
+            [self removeFromSuperview];
+        }];
     } else{
         [UIView animateWithDuration:SDPhotoBrowserHideImageAnimationDuration animations:^{
             tempView.frame = targetTemp;
@@ -247,8 +247,6 @@
     CGFloat w = _scrollView.frame.size.width - SDPhotoBrowserImageViewMargin * 2;
     CGFloat h = _scrollView.frame.size.height;
     
-    
-    
     [_scrollView.subviews enumerateObjectsUsingBlock:^(SDImageView *obj, NSUInteger idx, BOOL *stop) {
         CGFloat x = SDPhotoBrowserImageViewMargin + idx * (SDPhotoBrowserImageViewMargin * 2 + w);
         obj.frame = CGRectMake(x, y, w, h);
@@ -256,12 +254,9 @@
     
     _scrollView.contentSize = CGSizeMake(_scrollView.subviews.count * _scrollView.frame.size.width, 0);
     _scrollView.contentOffset = CGPointMake(self.currentImageIndex * _scrollView.frame.size.width, 0);
-    
-    
     if (!_hasShowedFistView) {
         [self showFirstImage];
     }
-    
     _indexLabel.center = CGPointMake(self.bounds.size.width * 0.5, 35);
     _saveButton.frame = CGRectMake(30, self.bounds.size.height - 70, 50, 25);
 }
@@ -270,7 +265,11 @@
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
     self.frame = window.bounds;
     [window addObserver:self forKeyPath:@"frame" options:0 context:nil];
+    self.alpha = 0;
     [window addSubview:self];
+    [UIView animateWithDuration:SDPhotoBrowserShowImageAnimationDuration animations:^{
+        self.alpha = 1;
+    }];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(UIView *)object change:(NSDictionary *)change context:(void *)context {
@@ -375,9 +374,9 @@
 - (UIVisualEffectView *)effectView {
     if (!_effectView) {
         _effectView = [[UIVisualEffectView alloc] initWithEffect: [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
-        _effectView.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height-88,  [UIScreen mainScreen].bounds.size.width, 88);
+        _effectView.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height,  [UIScreen mainScreen].bounds.size.width, 88);
         UIButton *saveBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, _effectView.frame.size.width, _effectView.frame.size.height * 0.5)];
-        [saveBtn setTitle:@"保存图片" forState:UIControlStateNormal];
+        [saveBtn setTitle:SDPhotoBrowserSaveImageSuccessText forState:UIControlStateNormal];
         saveBtn.titleLabel.font = [UIFont systemFontOfSize:15];
         [saveBtn addTarget:self action:@selector(saveImage) forControlEvents:UIControlEventTouchUpInside];
         UIButton *cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, _effectView.frame.size.height*0.5, _effectView.frame.size.width, _effectView.frame.size.height * 0.5)];
@@ -386,8 +385,8 @@
         [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
         [cancelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [cancelBtn addTarget:self action:@selector(cancelAction) forControlEvents:UIControlEventTouchUpInside];
-        [_effectView addSubview:saveBtn];
-        [_effectView addSubview:cancelBtn];
+        [_effectView.contentView addSubview:saveBtn];
+        [_effectView.contentView addSubview:cancelBtn];
         CALayer *lineLayer = [CALayer layer];
         lineLayer.backgroundColor = [UIColor lightGrayColor].CGColor;
         lineLayer.frame = CGRectMake(0, _effectView.frame.size.height*0.5, _effectView.frame.size.width, 0.5);
@@ -395,5 +394,6 @@
     }
     return _effectView;
 }
+
 
 @end

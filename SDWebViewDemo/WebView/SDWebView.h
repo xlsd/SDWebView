@@ -53,7 +53,7 @@
 /**
  获取交互的参数代理
  */
-@property (nonatomic, assign) id<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler> webDelegate;
+@property (nonatomic, weak) id<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler> webDelegate;
 
 /**
  根据URL初始化

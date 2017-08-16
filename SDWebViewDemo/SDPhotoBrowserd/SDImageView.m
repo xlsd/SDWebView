@@ -10,7 +10,7 @@
 #import "UIImageView+WebCache.h"
 #import "SDBrowserdConfig.h"
 
-@implementation SDImageView {
+@implementation SDImageView  {
     __weak SDLoadingView *_waitingView;
     BOOL _didCheckSize;
     UIScrollView *_scroll;
@@ -21,8 +21,7 @@
 }
 
 
-- (id)initWithFrame:(CGRect)frame
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         self.userInteractionEnabled = YES;
@@ -40,13 +39,11 @@
     return self;
 }
 
-- (BOOL)isScaled
-{
+- (BOOL)isScaled {
     return  1.0 != _totalScale;
 }
 
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [super layoutSubviews];
     _waitingView.center = CGPointMake(self.frame.size.width * 0.5, self.frame.size.height * 0.5);
     
@@ -83,15 +80,12 @@
 
 
 
-- (void)setProgress:(CGFloat)progress
-{
+- (void)setProgress:(CGFloat)progress {
     _progress = progress;
     _waitingView.progress = progress;
-    
 }
 
-- (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder
-{
+- (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder {
     SDLoadingView *waiting = [[SDLoadingView alloc] init];
     waiting.bounds = CGRectMake(0, 0, 50, 50);
     waiting.mode = SDWaitingViewProgressMode;
@@ -110,7 +104,7 @@
             UILabel *label = [[UILabel alloc] init];
             label.bounds = CGRectMake(0, 0, 160, 30);
             label.center = CGPointMake(imageViewWeak.bounds.size.width * 0.5, imageViewWeak.bounds.size.height * 0.5);
-            label.text = @"图片加载失败";
+            label.text = SDPhotoBrowserSaveImageFailText;
             label.font = [UIFont systemFontOfSize:16];
             label.textColor = [UIColor whiteColor];
             label.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
@@ -122,12 +116,11 @@
             _scrollImageView.image = image;
             [_scrollImageView setNeedsDisplay];
         }
-
+        
     }];
 }
 
-- (void)zoomImage:(UIPinchGestureRecognizer *)recognizer
-{
+- (void)zoomImage:(UIPinchGestureRecognizer *)recognizer {
     [self prepareForImageViewScaling];
     CGFloat scale = recognizer.scale;
     CGFloat temp = _totalScale + (scale - 1);
@@ -135,15 +128,13 @@
     recognizer.scale = 1.0;
 }
 
-- (void)setTotalScale:(CGFloat)totalScale
-{
-    if ((_totalScale < 0.5 && totalScale < _totalScale) || (_totalScale > 2.0 && totalScale > _totalScale)) return; // 最大缩放 2倍,最小0.5倍
+- (void)setTotalScale:(CGFloat)totalScale {
+    if ((_totalScale < 1.0 && totalScale < _totalScale) || (_totalScale > 2.0 && totalScale > _totalScale)) return; // 最大缩放 2倍,最小1倍
     
     [self zoomWithScale:totalScale];
 }
 
-- (void)zoomWithScale:(CGFloat)scale
-{
+- (void)zoomWithScale:(CGFloat)scale {
     _totalScale = scale;
     
     _zoomingImageView.transform = CGAffineTransformMakeScale(scale, scale);
@@ -168,8 +159,7 @@
     }
 }
 
-- (void)doubleTapToZommWithScale:(CGFloat)scale
-{
+- (void)doubleTapToZommWithScale:(CGFloat)scale {
     [self prepareForImageViewScaling];
     [UIView animateWithDuration:0.5 animations:^{
         [self zoomWithScale:scale];
@@ -180,11 +170,10 @@
     }];
 }
 
-- (void)prepareForImageViewScaling
-{
+- (void)prepareForImageViewScaling {
     if (!_zoomingScroolView) {
         _zoomingScroolView = [[UIScrollView alloc] initWithFrame:self.bounds];
-        _zoomingScroolView.backgroundColor = SDPhotoBrowserBackgrounColor;
+        _zoomingScroolView.backgroundColor = [UIColor clearColor];
         _zoomingScroolView.contentSize = self.bounds.size;
         UIImageView *zoomingImageView = [[UIImageView alloc] initWithImage:self.image];
         CGSize imageSize = zoomingImageView.image.size;
@@ -201,29 +190,25 @@
     }
 }
 
-- (void)scaleImage:(CGFloat)scale
-{
+- (void)scaleImage:(CGFloat)scale {
     [self prepareForImageViewScaling];
     [self setTotalScale:scale];
 }
 
 // 清除缩放
-- (void)eliminateScale
-{
+- (void)eliminateScale {
     [self clear];
     _totalScale = 1.0;
 }
 
-- (void)clear
-{
+- (void)clear {
     [_zoomingScroolView removeFromSuperview];
     _zoomingScroolView = nil;
     _zoomingImageView = nil;
     
 }
 
-- (void)removeWaitingView
-{
+- (void)removeWaitingView {
     [_waitingView removeFromSuperview];
 }
 
