@@ -16,7 +16,7 @@
     BOOL _displayURL;// 显示即将调转的URL
 }
 
-//  交互对象，使用它个页面注入JS代码给能够获取到的页面图片添加点击事件
+//  交互对象，使用它给页面注入JS代码，给页面图片添加点击事件
 @property (nonatomic, strong) WKUserScript *userScript;
 
 @end
@@ -29,7 +29,7 @@
 //  MARK: - init
 - (instancetype)initWithURLString:(NSString *)urlString {
     self = [super init];
-    [self setDefaultValue];
+    self.URLString = urlString;
     return self;
 }
 
@@ -48,7 +48,6 @@
     configer.allowsInlineMediaPlayback = YES;
     [configer.userContentController addUserScript:self.userScript];
     self = [super initWithFrame:frame configuration:configer];
-    [self setDefaultValue];
     return self;
 }
 
@@ -88,14 +87,14 @@
     }];
 }
 
-#pragma mark - js调用原生方法 可在此方法中获得传递回来的参数
+//  MARK: - js调用原生方法 可在此方法中获得传递回来的参数
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
     if(self.webDelegate !=nil && [self.webDelegate respondsToSelector:@selector(userContentController:didReceiveScriptMessage:)]){
         [self.webDelegate userContentController:userContentController didReceiveScriptMessage:message];
     }
 }
 
-#pragma mark - 检查cookie及页面HTML元素
+//  MARK: - 检查cookie及页面HTML元素
 //页面加载完成后调用
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     //获取图片数组
@@ -130,14 +129,14 @@
     }
 }
 
-#pragma mark - 页面开始加载就调用
+//  MARK: - 页面开始加载就调用
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
     if (self.webDelegate != nil && [self.webDelegate respondsToSelector:@selector(webView:didStartProvisionalNavigation:)]) {
         [self.webDelegate webView:webView didStartProvisionalNavigation:navigation];
     }
 }
 
-#pragma mark - 导航每次跳转调用跳转
+//  MARK: - 导航每次跳转调用跳转
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     //预览图片
     if ([navigationAction.request.URL.scheme isEqualToString:@"image-preview"]) {
@@ -165,7 +164,7 @@
     }
 }
 
-#pragma mark - 进度条
+//  MARK: - 进度条
 - (UIProgressView *)progressView {
     if(!_progressView) {
         _progressView = [[UIProgressView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
@@ -175,8 +174,7 @@
     }
     return _progressView;
 }
-
-#pragma mark - 清除cookie
+//  MARK: - 清除cookie
 - (void)removeCookies {
     WKWebsiteDataStore *dateStore = [WKWebsiteDataStore defaultDataStore];
     [dateStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]

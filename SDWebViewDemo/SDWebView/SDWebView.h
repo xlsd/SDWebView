@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  web页面中的图片链接数组
  */
-@property (nonatomic, strong) NSMutableArray *imgSrcArray;
+@property (nonatomic, strong, readonly) NSMutableArray *imgSrcArray;
 
 /**
  进度条
