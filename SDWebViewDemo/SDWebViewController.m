@@ -21,11 +21,12 @@
     self.view.backgroundColor = [UIColor whiteColor];
     
     SDWebView *webView = [[SDWebView alloc] initWithFrame:self.view.bounds];
-    [webView loadLocalHTMLWithFileName:@"source"];
     
+    //  Load local HTML
+//    [webView loadLocalHTMLWithFileName:@"source"];
     
     //  Example like this, you need set ATS allow load Yes.
-//    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.baidu.com"]]];
+    [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.ytxedu.com"]]];
     
     [self.view addSubview:webView];
     
