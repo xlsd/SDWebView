@@ -1,7 +1,6 @@
 ### Demo中包含两个组件，SDWebView 和 SDPhotoBrowserd，demo中图片缓存用到了SDWebImage 框架。
     SDWebView组件 是针对WKWebView进行的深度封装、支持和H5交互、包括调用js方法等。挺全面的！真的。其他针对WKWebView封装的就不要看了。  
-    SDPhotoBrowserd组件 是一个图片浏览器，创建简单易用，可以复制demo中的代码。
-    demo是使用SDWebView加载的图片页面，然后使用SDPhotoBrowserd进行图片预览，毛玻璃的背景比普通黑色耐看！需要用到WKWebView中图片预览的这个demo就在合适不过了！
+    SDPhotoBrowserd组件 是一个图片浏览器，创建简单易用，可以复制demo中的代码。demo是使用SDWebView加载的图片页面，然后使用SDPhotoBrowserd进行图片预览，毛玻璃的背景比普通黑色耐看！需要用到WKWebView中图片预览的这个demo就在合适不过了！
    ![image](https://github.com/giveMeHug/SDWebView/blob/master/SDWebViewDemo/SDPhotoBrowserd.gif)<br>  
 
 ### 功能支持
