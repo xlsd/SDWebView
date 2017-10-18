@@ -1,10 +1,10 @@
-## Demo中包含两个组件，SDWebView 和 SDPhotoBrowserd，demo中图片缓存用到了SDWebImage 框架，下载demo 后需要pod install 一下。
+### Demo中包含两个组件，SDWebView 和 SDPhotoBrowserd，demo中图片缓存用到了SDWebImage 框架。
     SDWebView组件 是针对WKWebView进行的深度封装、支持和H5交互、包括调用js方法等。挺全面的！真的。其他针对WKWebView封装的就不要看了。  
     SDPhotoBrowserd组件 是一个图片浏览器，创建简单易用，可以复制demo中的代码。
-    demo是使用SDWebView加载的图片页面，然后使用SDPhotoBrowserd进行图片预览，磨砂的背景比普通黑色耐看！需要用到WKWebView中图片预览的这个demo就在合适不过了！
+    demo是使用SDWebView加载的图片页面，然后使用SDPhotoBrowserd进行图片预览，毛玻璃的背景比普通黑色耐看！需要用到WKWebView中图片预览的这个demo就在合适不过了！
    ![image](https://github.com/giveMeHug/SDWebView/blob/master/SDWebViewDemo/SDPhotoBrowserd.gif)<br>  
 
-# 功能支持
+### 功能支持
     一.支持H5页面图片预览
     二.支持H5调用OC  OC调用H5
     三.更多！！！
@@ -84,22 +84,6 @@ self.webView.jsHandlers = @[TOLOGIN,TOPAY,TOYATI];
  注入H5页面的交互模型
  */
 @property (nonatomic, strong) NSArray<NSString *> *jsHandlers;
-
-
-/**
- 是否显示加载的HTML页面源码 default NO
- */
-@property (nonatomic, assign) BOOL displayHTML;
-
-/**
- 是否显示加载的HTML页面中的cookie default NO
- */
-@property (nonatomic, assign) BOOL displayCookies;
-
-/**
- 每次跳转是否需要打印跳转的URL default YES
- */
-@property (nonatomic, assign) BOOL displayURL;
 
 /**
  获取交互的参数代理
