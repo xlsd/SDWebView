@@ -8,9 +8,9 @@
 
 #import "SDWebView.h"
 #import <Foundation/Foundation.h>
-#import "SDPhotoBrowserd.h"
+#import "YYPhotoBrowseView.h"
 
-@interface SDWebView ()<SDPhotoBrowserDelegate> {
+@interface SDWebView () {
     BOOL _displayHTML;  //  显示页面元素
     BOOL _displayCookies;// 显示页面Cookies
     BOOL _displayURL;// 显示即将调转的URL
@@ -228,34 +228,24 @@
 // 预览图片
 - (void)previewPicture {
     NSInteger currentIndex = 0;
+    UIImageView *imageView = [[UIImageView alloc] init];
+    [self addSubview:imageView];
+    imageView.center = self.center;
+    NSMutableArray *items = [NSMutableArray array];
     for (NSInteger i = 0; i < self.imgSrcArray.count; i++) {
         NSString *path = self.imgSrcArray[i];
+        YYPhotoGroupItem *item = [YYPhotoGroupItem new];
+        item.thumbView = self.superview;
+        NSURL *url = [NSURL URLWithString:self.imgSrcArray[i]];
+        item.thumbView = imageView;
+        item.largeImageURL = url;
+        [items addObject:item];
         if ([path isEqualToString:_imgSrc]) {
             currentIndex = i;
         }
     }
-    SDPhotoBrowserd *browser = [[SDPhotoBrowserd alloc] init];
-    browser.imageCount = self.imgSrcArray.count; // 图片总数
-    browser.currentImageIndex = currentIndex;
-    browser.sourceImagesContainerView = self.superview; // 原图的父控件
-    browser.delegate = self;
-    [browser show];
-}
-
-//- (UIImage *)photoBrowser:(SDPhotoBrowser *)browser placeholderImageForIndex:(NSInteger)index {
-//    UIImage *img = [UIImage createImageWithColor:[UIColor colorWithHexString:ThemeColor alpha:0.5]];
-//    UIImageView *imgView = [[UIImageView alloc] initWithImage:img];
-//    imgView.frame = CGRectMake(0, 0, ScreenWidth, 200);
-//    imgView.center = self.center;
-//    return imgView.image;
-//}
-
-
-// 返回高质量图片的url
-- (NSURL *)photoBrowser:(SDPhotoBrowserd *)browser highQualityImageURLForIndex:(NSInteger)index {
-    
-    return [NSURL URLWithString:self.imgSrcArray[index]];
-    
+    YYPhotoBrowseView *groupView = [[YYPhotoBrowseView alloc]initWithGroupItems:items];
+    [groupView presentFromImageView:imageView toContainer:self.superview animated:YES completion:nil];
 }
 
 - (WKUserScript *)userScript {
