@@ -9,5 +9,7 @@ s.homepage     = "https://github.com/giveMeHug/SDWebView"
 s.license      = { :type => "MIT", :file => "LICENSE" }
 s.author             = { "xuelin" => "413890968@qq.com" }
 s.source       = { :git => "https://github.com/giveMeHug/SDWebView.git", :tag => s.version }
-s.source_files  = "SDWebView/*.{h,m}, SDWebView/PhotoBrowseView/*.{h,m},SDWebView/PhotoBrowseView/Quartz/*.{h,m},SDWebView/PhotoBrowseView/YYWebImage/*.{h,m},SDWebView/PhotoBrowseView/YYWebImage/**/*.{h,m}"
+s.source_files  = "SDWebView/**/*.{h,m}"
+s.platform     =  :ios, '8.0'
+s.requires_arc = true
 end

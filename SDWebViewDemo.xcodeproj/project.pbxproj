@@ -53,8 +53,6 @@
 		9A5C48921E95318500DF8CA6 /* SDWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDWebViewController.h; sourceTree = "<group>"; };
 		9A5C48931E95318500DF8CA6 /* SDWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDWebViewController.m; sourceTree = "<group>"; };
 		9A5C48951E95359600DF8CA6 /* source.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = source.html; sourceTree = "<group>"; };
-		E14C47851F4443B00099DC27 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		E14C47891F4443B00099DC27 /* SDWebView.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = SDWebView.podspec; sourceTree = "<group>"; };
 		E14C478C1F44446F0099DC27 /* SDWebView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SDWebView.h; sourceTree = "<group>"; };
 		E14C478D1F44446F0099DC27 /* SDWebView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SDWebView.m; sourceTree = "<group>"; };
 		E14C478E1F4444DC0099DC27 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
@@ -156,11 +154,9 @@
 			isa = PBXGroup;
 			children = (
 				E14C478E1F4444DC0099DC27 /* README.md */,
-				E14C47851F4443B00099DC27 /* LICENSE */,
 				9A5C48951E95359600DF8CA6 /* source.html */,
 				9A5C48901E95247900DF8CA6 /* SDPhotoBrowserd.gif */,
 				9A27F4C31E947BEE008FE993 /* main.m */,
-				E14C47891F4443B00099DC27 /* SDWebView.podspec */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
