@@ -228,11 +228,15 @@
 // 预览图片
 - (void)previewPicture {
     NSInteger currentIndex = 0;
-    UIImageView *imageView = [[UIImageView alloc] init];
-    [self addSubview:imageView];
-    imageView.center = self.center;
     NSMutableArray *items = [NSMutableArray array];
+    NSMutableArray *imageViews = @[].mutableCopy;
+    UIView *fromView = nil;
     for (NSInteger i = 0; i < self.imgSrcArray.count; i++) {
+        UIImageView *imageView = [[UIImageView alloc] init];
+        [self addSubview:imageView];
+        imageView.center = self.center;
+        [imageViews addObject:imageView];
+        
         NSString *path = self.imgSrcArray[i];
         YYPhotoGroupItem *item = [YYPhotoGroupItem new];
         item.thumbView = self.superview;
@@ -243,9 +247,10 @@
         if ([path isEqualToString:_imgSrc]) {
             currentIndex = i;
         }
+        fromView = imageViews[currentIndex];
     }
     YYPhotoBrowseView *groupView = [[YYPhotoBrowseView alloc]initWithGroupItems:items];
-    [groupView presentFromImageView:imageView toContainer:self.superview animated:YES completion:nil];
+    [groupView presentFromImageView:fromView toContainer:self.superview animated:YES completion:nil];
 }
 
 - (WKUserScript *)userScript {
