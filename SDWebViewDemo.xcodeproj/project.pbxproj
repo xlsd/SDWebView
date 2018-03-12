@@ -11,7 +11,6 @@
 		9A27F4C71E947BEE008FE993 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A27F4C61E947BEE008FE993 /* AppDelegate.m */; };
 		9A27F4CF1E947BEE008FE993 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9A27F4CE1E947BEE008FE993 /* Assets.xcassets */; };
 		9A27F4D21E947BEE008FE993 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9A27F4D01E947BEE008FE993 /* LaunchScreen.storyboard */; };
-		9A5C48911E95247900DF8CA6 /* SDPhotoBrowserd.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9A5C48901E95247900DF8CA6 /* SDPhotoBrowserd.gif */; };
 		9A5C48941E95318500DF8CA6 /* SDWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A5C48931E95318500DF8CA6 /* SDWebViewController.m */; };
 		9A5C48961E95359600DF8CA6 /* source.html in Resources */ = {isa = PBXBuildFile; fileRef = 9A5C48951E95359600DF8CA6 /* source.html */; };
 		E14C478F1F4444F20099DC27 /* SDWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = E14C478D1F44446F0099DC27 /* SDWebView.m */; };
@@ -49,7 +48,6 @@
 		9A27F4CE1E947BEE008FE993 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9A27F4D11E947BEE008FE993 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9A27F4D31E947BEE008FE993 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9A5C48901E95247900DF8CA6 /* SDPhotoBrowserd.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = SDPhotoBrowserd.gif; sourceTree = "<group>"; };
 		9A5C48921E95318500DF8CA6 /* SDWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDWebViewController.h; sourceTree = "<group>"; };
 		9A5C48931E95318500DF8CA6 /* SDWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDWebViewController.m; sourceTree = "<group>"; };
 		9A5C48951E95359600DF8CA6 /* source.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = source.html; sourceTree = "<group>"; };
@@ -155,7 +153,6 @@
 			children = (
 				E14C478E1F4444DC0099DC27 /* README.md */,
 				9A5C48951E95359600DF8CA6 /* source.html */,
-				9A5C48901E95247900DF8CA6 /* SDPhotoBrowserd.gif */,
 				9A27F4C31E947BEE008FE993 /* main.m */,
 			);
 			name = "Supporting Files";
@@ -334,7 +331,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9A27F4D21E947BEE008FE993 /* LaunchScreen.storyboard in Resources */,
-				9A5C48911E95247900DF8CA6 /* SDPhotoBrowserd.gif in Resources */,
 				9A27F4CF1E947BEE008FE993 /* Assets.xcassets in Resources */,
 				9A5C48961E95359600DF8CA6 /* source.html in Resources */,
 				E1E6FF0020557D3A00FE8FCA /* WebP.sh in Resources */,
