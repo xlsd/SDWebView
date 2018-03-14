@@ -343,7 +343,10 @@ static void _YYDiskCacheSetGlobal(YYDiskCache *cache) {
             return;
         }
         Lock();
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wimplicit-retain-self"
         [_kv removeAllItemsWithProgressBlock:progress endBlock:end];
+#pragma clang diagnostic pop
         Unlock();
     });
 }

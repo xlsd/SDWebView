@@ -207,7 +207,8 @@ static inline dispatch_queue_t YYImageCacheDecodeQueue() {
     if (!block) return;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         UIImage *image = nil;
-        
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wimplicit-retain-self"
         if (type & YYImageCacheTypeMemory) {
             image = [_memoryCache objectForKey:key];
             if (image) {
@@ -229,7 +230,7 @@ static inline dispatch_queue_t YYImageCacheDecodeQueue() {
                 return;
             }
         }
-        
+#pragma clang diagnostic pop
         dispatch_async(dispatch_get_main_queue(), ^{
             block(nil, YYImageCacheTypeNone);
         });
@@ -242,12 +243,15 @@ static inline dispatch_queue_t YYImageCacheDecodeQueue() {
 
 - (void)getImageDataForKey:(NSString *)key withBlock:(void (^)(NSData *imageData))block {
     if (!block) return;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wimplicit-retain-self"
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSData *data = (id)[_diskCache objectForKey:key];
         dispatch_async(dispatch_get_main_queue(), ^{
             block(data);
         });
     });
+#pragma clang diagnostic pop
 }
 
 @end

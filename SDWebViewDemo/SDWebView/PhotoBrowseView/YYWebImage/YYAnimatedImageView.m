@@ -232,6 +232,8 @@ typedef NS_ENUM(NSUInteger, YYAnimatedImageType) {
 // init the animated params.
 - (void)resetAnimated {
     dispatch_once(&_onceToken, ^{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wimplicit-retain-self"
         _lock = dispatch_semaphore_create(1);
         _buffer = [NSMutableDictionary new];
         _requestQueue = [[NSOperationQueue alloc] init];
@@ -241,7 +243,7 @@ typedef NS_ENUM(NSUInteger, YYAnimatedImageType) {
             [_link addToRunLoop:[NSRunLoop mainRunLoop] forMode:_runloopMode];
         }
         _link.paused = YES;
-        
+#pragma clang diagnostic pop
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveMemoryWarning:) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     });
