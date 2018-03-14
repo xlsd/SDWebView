@@ -2,7 +2,7 @@
 Pod::Spec.new do |s|
 
 s.name         = "SDWebView"
-s.version      = "1.0.1"
+s.version      = "1.0.2"
 s.summary      = "Base on WKWebView."
 s.description  = "Base on WKWebView, handel javaScript"
 s.homepage     = "https://github.com/giveMeHug/SDWebView"
