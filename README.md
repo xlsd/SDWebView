@@ -142,6 +142,9 @@ function configer() {
 }
 在callJS方法中直接让前端人员返回一个json 或者 其他返回值 OC即可在handler这个blcok 中获取 这个返回值
 ```
+```
+Support Cocopods: pod 'SDWebView'
+```
 
 ## 特别说明
 SDWebView中注入的js只对部分H5页面有效，如果当前的H5页面中的图片是在iframe中引用的另外一个URL中的图片，那么SDWebView是不支持的，请自行参考交互代码和前端人员指定交互方式，特此说明。
