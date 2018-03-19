@@ -29,7 +29,12 @@
     [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"http://www.ytxedu.com"]]];
     
     [self.view addSubview:webView];
-    
+    //  Save photo success noti, you can observe it if you need.
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(saveSuccess) name:kSDWebViewSavePhotoSuccessNoti object:nil];
+}
+
+- (void)saveSuccess {
+    NSLog(@"save success");
 }
 
 

@@ -7,6 +7,7 @@
 //
 
 #import <WebKit/WebKit.h>
+#import "YYPhotoBrowseView.h"
 NS_ASSUME_NONNULL_BEGIN
 @interface SDWebView : WKWebView<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler>
 

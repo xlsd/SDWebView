@@ -285,7 +285,7 @@
 
 @property (nonatomic, assign) NSInteger fromItemIndex;
 @property (nonatomic, assign) BOOL isPresented;
-
+@property (nonatomic, strong) UIVisualEffectView *effectView;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, assign) CGPoint panGestureBeginPoint;
 @end
@@ -814,7 +814,33 @@
     
     YYPhotoGroupCell *tile = [self cellForPage:self.currentPage];
     if (!tile.imageView.image) return;
+
+    [self addSubview:self.effectView];
+    [UIView animateWithDuration:0.25 delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0.5 options:UIViewAnimationOptionLayoutSubviews animations:^{
+        self.effectView.transform = CGAffineTransformMakeTranslation(0, -self.effectView.height);
+    } completion:^(BOOL finished) {}];
     
+//    UIActivityViewController *activityViewController =
+//    [[UIActivityViewController alloc] initWithActivityItems:@[imageItem] applicationActivities:nil];
+//    if ([activityViewController respondsToSelector:@selector(popoverPresentationController)]) {
+//        activityViewController.popoverPresentationController.sourceView = self;
+//    }
+//
+//    UIViewController *toVC = self.toContainerView.viewController;
+//    if (!toVC) toVC = self.viewController;
+//    [toVC presentViewController:activityViewController animated:YES completion:nil];
+}
+
+- (void)cancelAction {
+    [UIView animateWithDuration:0.25 animations:^{
+        self.effectView.transform = CGAffineTransformMakeTranslation(0, 88);
+    } completion:^(BOOL finished) {
+        [self.effectView removeFromSuperview];
+    }];
+}
+- (void)saveImage {
+    YYPhotoGroupCell *tile = [self cellForPage:self.currentPage];
+    if (!tile.imageView.image) return;
     // try to save original image data if the image contains multi-frame (such as GIF/APNG)
     id imageItem = [tile.imageView.image yy_imageDataRepresentation];
     YYImageType type = YYImageDetectType((__bridge CFDataRef)(imageItem));
@@ -823,16 +849,30 @@
         type != YYImageTypeGIF) {
         imageItem = tile.imageView.image;
     }
-    
-    UIActivityViewController *activityViewController =
-    [[UIActivityViewController alloc] initWithActivityItems:@[imageItem] applicationActivities:nil];
-    if ([activityViewController respondsToSelector:@selector(popoverPresentationController)]) {
-        activityViewController.popoverPresentationController.sourceView = self;
-    }
+    UIImage *newImage = [UIImage imageWithData:imageItem];
+    UIImageWriteToSavedPhotosAlbum(newImage, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
+}
 
-    UIViewController *toVC = self.toContainerView.viewController;
-    if (!toVC) toVC = self.viewController;
-    [toVC presentViewController:activityViewController animated:YES completion:nil];
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+    UILabel *label = [[UILabel alloc] init];
+    label.textColor = [UIColor whiteColor];
+    label.backgroundColor = [UIColor colorWithRed:0.1f green:0.1f blue:0.1f alpha:0.90f];
+    label.layer.cornerRadius = 5;
+    label.clipsToBounds = YES;
+    label.bounds = CGRectMake(0, 0, 150, 30);
+    label.center = self.center;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.font = [UIFont boldSystemFontOfSize:17];
+    [[UIApplication sharedApplication].keyWindow addSubview:label];
+    [[UIApplication sharedApplication].keyWindow bringSubviewToFront:label];
+    if (error) {
+        label.text = @"保存失败";
+    }   else {
+        label.text = @"保存成功";
+        [self.effectView removeFromSuperview];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kSDWebViewSavePhotoSuccessNoti object:nil];
+    }
+    [label performSelector:@selector(removeFromSuperview) withObject:nil afterDelay:1.0];
 }
 
 - (void)pan:(UIPanGestureRecognizer *)g {
@@ -909,6 +949,29 @@
         }
         default:break;
     }
+}
+- (UIVisualEffectView *)effectView {
+    if (!_effectView) {
+        _effectView = [[UIVisualEffectView alloc] initWithEffect: [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight]];
+        _effectView.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height,  [UIScreen mainScreen].bounds.size.width, 88);
+        UIButton *saveBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, _effectView.frame.size.width, _effectView.frame.size.height * 0.5)];
+        [saveBtn setTitle:@"保存图片" forState:UIControlStateNormal];
+        saveBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+        [saveBtn addTarget:self action:@selector(saveImage) forControlEvents:UIControlEventTouchUpInside];
+        UIButton *cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, _effectView.frame.size.height*0.5, _effectView.frame.size.width, _effectView.frame.size.height * 0.5)];
+        cancelBtn.titleLabel.font = [UIFont systemFontOfSize:15];
+        [saveBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [cancelBtn setTitle:@"取消" forState:UIControlStateNormal];
+        [cancelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [cancelBtn addTarget:self action:@selector(cancelAction) forControlEvents:UIControlEventTouchUpInside];
+        [_effectView.contentView addSubview:saveBtn];
+        [_effectView.contentView addSubview:cancelBtn];
+        CALayer *lineLayer = [CALayer layer];
+        lineLayer.backgroundColor = [UIColor lightGrayColor].CGColor;
+        lineLayer.frame = CGRectMake(0, _effectView.frame.size.height*0.5, _effectView.frame.size.width, 0.5);
+        [_effectView.layer addSublayer:lineLayer];
+    }
+    return _effectView;
 }
 
 

@@ -8,6 +8,8 @@
 #import <UIKit/UIKit.h>
 #import "YYWebImage.h"
 
+#define kSDWebViewSavePhotoSuccessNoti @"SDWebViewSavePhotoSuccessNoti"
+
 /// Single picture's info.
 @interface YYPhotoGroupItem : NSObject
 @property (nonatomic, strong) UIView *thumbView; ///< thumb image, used for animation position calculation

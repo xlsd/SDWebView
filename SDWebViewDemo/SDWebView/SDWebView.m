@@ -8,7 +8,6 @@
 
 #import "SDWebView.h"
 #import <Foundation/Foundation.h>
-#import "YYPhotoBrowseView.h"
 
 @interface SDWebView () {
     BOOL _displayHTML;  //  显示页面元素
