@@ -2,8 +2,8 @@
 //  SDWebView.h
 //  YTXEducation
 //
-//  Created by 薛林 on 17/2/25.
-//  Copyright © 2017年 YunTianXia. All rights reserved.
+//  Created by xuelin on 17/2/25.
+//  Copyright © 2017年 xuelin. All rights reserved.
 //
 
 #import <WebKit/WebKit.h>
@@ -56,12 +56,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)removejsHandlers;
 
 /**
- 清除所有cookie
+ 清除所有cookie(>=iOS9.0)
  */
 - (void)removeCookies;
 
 /**
- 清除指定域名中的cookie
+ 清除指定域名中的cookie(>=iOS9.0)
  
  @param hostName 域名
  */

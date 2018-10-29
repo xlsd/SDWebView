@@ -2,8 +2,8 @@
 //  SDWebView.m
 //  YTXEducation
 //
-//  Created by 薛林 on 17/2/25.
-//  Copyright © 2017年 YunTianXia. All rights reserved.
+//  Created by xuelin on 17/2/25.
+//  Copyright © 2017年 xuelin. All rights reserved.
 //
 
 #import "SDWebView.h"
@@ -61,6 +61,7 @@
     _displayURL = YES;
     self.UIDelegate = self;
     self.navigationDelegate = self;
+    self.allowsBackForwardNavigationGestures = YES;
     self.scrollView.showsVerticalScrollIndicator = NO;
 }
 
@@ -175,33 +176,37 @@
 }
 //  MARK: - 清除cookie
 - (void)removeCookies {
-    WKWebsiteDataStore *dateStore = [WKWebsiteDataStore defaultDataStore];
-    [dateStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]
-                     completionHandler:^(NSArray<WKWebsiteDataRecord *> * __nonnull records) {
-                         for (WKWebsiteDataRecord *record  in records) {
-                             [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:record.dataTypes
-                                                                       forDataRecords:@[record]
-                                                                    completionHandler:^{
-                                                                        NSLog(@"Cookies for %@ deleted successfully",record.displayName);
-                                                                    }];
-                         }
-                     }];
+    if (@available(iOS 9.0, *)) {
+        WKWebsiteDataStore *dateStore = [WKWebsiteDataStore defaultDataStore];
+        [dateStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]
+                         completionHandler:^(NSArray<WKWebsiteDataRecord *> * __nonnull records) {
+                             for (WKWebsiteDataRecord *record  in records) {
+                                 [[WKWebsiteDataStore defaultDataStore] removeDataOfTypes:record.dataTypes
+                                                                           forDataRecords:@[record]
+                                                                        completionHandler:^{
+                                                                            NSLog(@"Cookies for %@ deleted successfully",record.displayName);
+                                                                        }];
+                             }
+                         }];
+    }
 }
 
 - (void)removeCookieWithHostName:(NSString *)hostName {
-    WKWebsiteDataStore *dateStore = [WKWebsiteDataStore defaultDataStore];
-    [dateStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]
-                     completionHandler:^(NSArray<WKWebsiteDataRecord *> * __nonnull records) {
-                         for (WKWebsiteDataRecord *record  in records) {
-                             if ( [record.displayName containsString:hostName]) {
-                                 [[WKWebsiteDataStore defaultDataStore]removeDataOfTypes:record.dataTypes
-                                                                          forDataRecords:@[record]
-                                                                       completionHandler:^{
-                                                                            NSLog(@"Cookies for %@ deleted successfully",record.displayName);
-                                                                          }];
+    if (@available(iOS 9.0, *)) {
+        WKWebsiteDataStore *dateStore = [WKWebsiteDataStore defaultDataStore];
+        [dateStore fetchDataRecordsOfTypes:[WKWebsiteDataStore allWebsiteDataTypes]
+                         completionHandler:^(NSArray<WKWebsiteDataRecord *> * __nonnull records) {
+                             for (WKWebsiteDataRecord *record  in records) {
+                                 if ( [record.displayName containsString:hostName]) {
+                                     [[WKWebsiteDataStore defaultDataStore]removeDataOfTypes:record.dataTypes
+                                                                              forDataRecords:@[record]
+                                                                           completionHandler:^{
+                                                                                NSLog(@"Cookies for %@ deleted successfully",record.displayName);
+                                                                              }];
+                                 }
                              }
-                         }
-                     }];
+                         }];
+    }
 }
 
 //  MARK: - 调用js方法
