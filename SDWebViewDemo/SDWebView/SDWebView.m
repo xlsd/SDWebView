@@ -1,6 +1,6 @@
 //
 //  SDWebView.m
-//  YTXEducation
+//  xuelin
 //
 //  Created by xuelin on 17/2/25.
 //  Copyright © 2017年 xuelin. All rights reserved.
@@ -103,7 +103,6 @@
         if (_imgSrcArray.count >= 2) {
             [_imgSrcArray removeLastObject];
         }
-        NSLog(@"%@",_imgSrcArray);
     }];
     
     [webView evaluateJavaScript:@"registerImageClickAction();" completionHandler:^(id _Nullable result, NSError * _Nullable error) {}];
@@ -141,9 +140,11 @@
     //预览图片
     if ([navigationAction.request.URL.scheme isEqualToString:@"image-preview"]) {
         NSString* path = [navigationAction.request.URL.absoluteString substringFromIndex:[@"image-preview:" length]];
-        path = [path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         _imgSrc = path;
         [self previewPicture];
+    }
+    if (_urlBlock) {
+        _urlBlock(navigationAction.request.URL.absoluteString);
     }
     if (_displayURL) {
         NSLog(@"-----------%@",navigationAction.request.URL.absoluteString);

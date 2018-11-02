@@ -1,6 +1,6 @@
 //
 //  SDWebView.h
-//  YTXEducation
+//  xuelin
 //
 //  Created by xuelin on 17/2/25.
 //  Copyright © 2017年 xuelin. All rights reserved.
@@ -9,6 +9,7 @@
 #import <WebKit/WebKit.h>
 #import "YYPhotoBrowseView.h"
 NS_ASSUME_NONNULL_BEGIN
+typedef void(^SDWebViewURLBlcok)(NSString *urlString);
 @interface SDWebView : WKWebView<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler>
 
 /**
@@ -30,7 +31,10 @@ NS_ASSUME_NONNULL_BEGIN
  注入H5页面的交互模型(可以是多个，也可以是一个)
  */
 @property (nonatomic, strong) NSArray<NSString *> *jsHandlers;
-
+/**
+ webView在发生跳转时会会调用
+ */
+@property (nonatomic, copy) SDWebViewURLBlcok urlBlock;
 /**
  获取交互的参数代理
  */
