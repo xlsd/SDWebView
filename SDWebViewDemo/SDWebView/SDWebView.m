@@ -99,9 +99,9 @@
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     //获取图片数组
     [webView evaluateJavaScript:@"getImages()" completionHandler:^(id _Nullable result, NSError * _Nullable error) {
-        _imgSrcArray = [NSMutableArray arrayWithArray:[result componentsSeparatedByString:@"+"]];
-        if (_imgSrcArray.count >= 2) {
-            [_imgSrcArray removeLastObject];
+        self->_imgSrcArray = [NSMutableArray arrayWithArray:[result componentsSeparatedByString:@"+"]];
+        if (self->_imgSrcArray.count >= 2) {
+            [self->_imgSrcArray removeLastObject];
         }
     }];
     

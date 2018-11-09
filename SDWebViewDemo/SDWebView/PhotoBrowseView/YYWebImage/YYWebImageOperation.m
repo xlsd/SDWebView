@@ -423,7 +423,7 @@ static void URLInBlackListAdd(NSURL *url) {
                 if (image || (_options & YYWebImageOptionRefreshImageCache)) {
                     NSData *data = _data;
                     dispatch_async([YYWebImageOperation _imageQueue], ^{
-                        [_cache setImage:image imageData:data forKey:_cacheKey withType:YYImageCacheTypeAll];
+                        [self->_cache setImage:image imageData:data forKey:self->_cacheKey withType:YYImageCacheTypeAll];
                     });
                 }
             }
