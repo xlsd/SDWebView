@@ -1,0 +1,11 @@
+build/
+out/
+.idea/
+xcuserdata/
+.DS_Store
+/fastlane/report.xml
+/fastlane/README.md
+Resources/UPComponentResource.bundle/
+/DerivedData
+/.vscode
+/UPMain/UPMain.xcodeproj/xcshareddata/xcschemes/UPMain.xcscheme
