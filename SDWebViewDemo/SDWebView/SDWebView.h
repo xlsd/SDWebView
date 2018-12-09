@@ -7,7 +7,7 @@
 //
 
 #import <WebKit/WebKit.h>
-#import "YYPhotoBrowseView.h"
+#import "YYSDPhotoBrowseView.h"
 NS_ASSUME_NONNULL_BEGIN
 typedef void(^SDWebViewURLBlcok)(NSString *urlString);
 @interface SDWebView : WKWebView<WKUIDelegate,WKNavigationDelegate,WKScriptMessageHandler>

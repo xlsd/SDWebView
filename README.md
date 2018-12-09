@@ -1,6 +1,6 @@
 ### Demo中包含两个组件，SDWebView 和 PhotoBrowser。
     SDWebView组件 是针对WKWebView进行的深度封装、支持和H5交互、包括调用js方法等。挺全面的，有不当之处，请多指教，微信：xue-zhi-yin-you-ni。 
-    PhotoBrowser组件 是早些时候我从耀源项目[YYKit](https://github.com/ibireme/YYKit)中抽离出来的图片浏览器，比我写的好用，就干脆移植过来，创建简单易用，可以复制demo中的代码。
+    PhotoBrowser组件 是早些时候我从耀源项目[YYSDKit](https://github.com/ibireme/YYSDKit)中抽离出来的图片浏览器，比我写的好用，就干脆移植过来，创建简单易用，可以复制demo中的代码。
     demo是使用SDWebView加载的图片页面，然后使用PhotoBrowser组件进行图片预览，需要用到WKWebView中图片预览的这个demo就在合适不过了！
     
    ![image](https://github.com/xlsd/SDWebView/blob/master/SDWebViewDemo/demo.gif)<br>  

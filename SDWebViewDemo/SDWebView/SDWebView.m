@@ -243,7 +243,7 @@
         [imageViews addObject:imageView];
         
         NSString *path = self.imgSrcArray[i];
-        YYPhotoGroupItem *item = [YYPhotoGroupItem new];
+        YYSDPhotoGroupItem *item = [YYSDPhotoGroupItem new];
         item.thumbView = self.superview;
         NSURL *url = [NSURL URLWithString:self.imgSrcArray[i]];
         item.thumbView = imageView;
@@ -254,7 +254,7 @@
         }
         fromView = imageViews[currentIndex];
     }
-    YYPhotoBrowseView *groupView = [[YYPhotoBrowseView alloc]initWithGroupItems:items];
+    YYSDPhotoBrowseView *groupView = [[YYSDPhotoBrowseView alloc]initWithGroupItems:items];
     [groupView presentFromImageView:fromView toContainer:self.superview animated:YES completion:nil];
 }
 
