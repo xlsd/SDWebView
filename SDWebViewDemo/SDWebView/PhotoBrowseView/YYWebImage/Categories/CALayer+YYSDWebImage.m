@@ -28,7 +28,7 @@ static int _YYWebImageSetterKey;
     return setter.imageURL;
 }
 
-- (void)setYy_imageURL:(NSURL *)imageURL {
+- (void)setYysd_imageURL:(NSURL *)imageURL {
     [self yysd_setImageWithURL:imageURL
               placeholder:nil
                   options:kNilOptions

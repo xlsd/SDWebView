@@ -23,19 +23,19 @@ static int _YYWebImageSetterKey;
 
 @implementation MKAnnotationView (YYSDWebImage)
 
-- (NSURL *)YYSD_imageURL {
+- (NSURL *)yysd_imageURL {
     _YYWebImageSetter *setter = objc_getAssociatedObject(self, &_YYWebImageSetterKey);
     return setter.imageURL;
 }
 
-- (void)setYy_imageURL:(NSURL *)imageURL {
-    [self YYSD_setImageWithURL:imageURL
-              placeholder:nil
-                  options:kNilOptions
-                  manager:nil
-                 progress:nil
-                transform:nil
-               completion:nil];
+- (void)setYysd_imageURL:(NSURL *)yysd_imageURL {
+    [self YYSD_setImageWithURL:yysd_imageURL
+                   placeholder:nil
+                       options:kNilOptions
+                       manager:nil
+                      progress:nil
+                     transform:nil
+                    completion:nil];
 }
 
 - (void)YYSD_setImageWithURL:(NSURL *)imageURL placeholder:(UIImage *)placeholder {

@@ -26,19 +26,19 @@ static int _YYWebImageHighlightedSetterKey;
 
 #pragma mark - image
 
-- (NSURL *)YYSD_imageURL {
+- (NSURL *)yysd_imageURL {
     _YYWebImageSetter *setter = objc_getAssociatedObject(self, &_YYWebImageSetterKey);
     return setter.imageURL;
 }
 
-- (void)setYy_imageURL:(NSURL *)imageURL {
-    [self YYSD_setImageWithURL:imageURL
-                 placeholder:nil
-                     options:kNilOptions
-                     manager:nil
-                    progress:nil
-                   transform:nil
-                  completion:nil];
+- (void)setYysd_imageURL:(NSURL *)yysd_imageURL {
+    [self YYSD_setImageWithURL:yysd_imageURL
+                   placeholder:nil
+                       options:kNilOptions
+                       manager:nil
+                      progress:nil
+                     transform:nil
+                    completion:nil];
 }
 
 - (void)YYSD_setImageWithURL:(NSURL *)imageURL placeholder:(UIImage *)placeholder {
@@ -191,19 +191,19 @@ static int _YYWebImageHighlightedSetterKey;
 
 #pragma mark - highlighted image
 
-- (NSURL *)YYSD_highlightedImageURL {
+- (NSURL *)yysd_highlightedImageURL {
     _YYWebImageSetter *setter = objc_getAssociatedObject(self, &_YYWebImageHighlightedSetterKey);
     return setter.imageURL;
 }
 
-- (void)setYy_highlightedImageURL:(NSURL *)imageURL {
-    [self YYSD_setHighlightedImageWithURL:imageURL
-                            placeholder:nil
-                                options:kNilOptions
-                                manager:nil
-                               progress:nil
-                              transform:nil
-                             completion:nil];
+- (void)setYysd_highlightedImageURL:(NSURL *)yysd_highlightedImageURL {
+    [self YYSD_setHighlightedImageWithURL:yysd_highlightedImageURL
+                              placeholder:nil
+                                  options:kNilOptions
+                                  manager:nil
+                                 progress:nil
+                                transform:nil
+                               completion:nil];
 }
 
 - (void)YYSD_setHighlightedImageWithURL:(NSURL *)imageURL placeholder:(UIImage *)placeholder {

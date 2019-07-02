@@ -374,7 +374,10 @@ static void URLInBlackListAdd(NSURL *url) {
         // request image from web
         [_lock lock];
         if (![self isCancelled]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             _connection = [[NSURLConnection alloc] initWithRequest:_request delegate:[_YYWebImageWeakProxy proxyWithTarget:self]];
+#pragma clang diagnostic pop
             if (![_request.URL isFileURL] && (_options & YYSDWebImageOptionShowNetworkActivity)) {
                 [YYSDWebImageManager incrementNetworkActivityCount];
             }

@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
  operation and create a new request operation to fetch image. Set nil to clear
  the image and image URL.
  */
-@property (nullable, nonatomic, strong) NSURL *YYSD_imageURL;
+@property (nullable, nonatomic, strong) NSURL *yysd_imageURL;
 
 /**
  Set the view's `image` with a specified URL.

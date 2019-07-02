@@ -2784,17 +2784,19 @@ CGImageRef YYSDCGImageCreateWithWebPData(CFDataRef webpData,
 
 - (BOOL)yysd_isDecodedForDisplay {
     if (self.images.count > 1) return YES;
-    NSNumber *num = objc_getAssociatedObject(self, @selector(yysd_isDecodedForDisplay));
+    NSNumber *num = objc_getAssociatedObject(self, _cmd);
     return [num boolValue];
 }
 
 - (void)setYysd_isDecodedForDisplay:(BOOL)yysd_isDecodedForDisplay {
-    objc_setAssociatedObject(self, @selector(setYysd_isDecodedForDisplay), @(yysd_isDecodedForDisplay), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(yysd_isDecodedForDisplay), @(yysd_isDecodedForDisplay), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (void)yysd_saveToAlbumWithCompletionBlock:(void(^)(NSURL *assetURL, NSError *error))completionBlock {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSData *data = [self _yy_dataRepresentationForSystem:YES];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
         [library writeImageDataToSavedPhotosAlbum:data metadata:nil completionBlock:^(NSURL *assetURL, NSError *error){
             if (!completionBlock) return;
@@ -2806,10 +2808,11 @@ CGImageRef YYSDCGImageCreateWithWebPData(CFDataRef webpData,
                 });
             }
         }];
+#pragma clang diagnostic pop
     });
 }
 
-- (NSData *)YYSD_imageDataRepresentation {
+- (NSData *)yysd_imageDataRepresentation {
     return [self _yy_dataRepresentationForSystem:NO];
 }
 
