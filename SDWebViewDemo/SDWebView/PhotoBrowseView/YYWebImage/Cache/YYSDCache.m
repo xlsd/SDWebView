@@ -1,6 +1,6 @@
 //
 //  YYSDCache.m
-//  YYSDCache <https://github.com/ibireme/YYSDCache>
+//  YYSDKit <https://github.com/ibireme/YYSDKit>
 //
 //  Created by ibireme on 15/2/13.
 //  Copyright (c) 2015 ibireme.
@@ -43,11 +43,11 @@
 }
 
 + (instancetype)cacheWithName:(NSString *)name {
-	return [[YYSDCache alloc] initWithName:name];
+	return [[self alloc] initWithName:name];
 }
 
 + (instancetype)cacheWithPath:(NSString *)path {
-    return [[YYSDCache alloc] initWithPath:path];
+    return [[self alloc] initWithPath:path];
 }
 
 - (BOOL)containsObjectForKey:(NSString *)key {
@@ -85,7 +85,12 @@
             block(key, object);
         });
     } else {
-        [_diskCache objectForKey:key withBlock:block];
+        [_diskCache objectForKey:key withBlock:^(NSString *key, id<NSCoding> object) {
+            if (object && ![_memoryCache objectForKey:key]) {
+                [_memoryCache setObject:object forKey:key];
+            }
+            block(key, object);
+        }];
     }
 }
 

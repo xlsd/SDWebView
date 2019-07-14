@@ -1,6 +1,6 @@
 //
 //  YYSDKVStorage.h
-//  YYSDCache <https://github.com/ibireme/YYSDCache>
+//  YYSDKit <https://github.com/ibireme/YYSDKit>
 //
 //  Created by ibireme on 15/4/22.
 //  Copyright (c) 2015 ibireme.
@@ -61,7 +61,7 @@ typedef NS_ENUM(NSUInteger, YYSDKVStorageType) {
  YYSDKVStorage is a key-value storage based on sqlite and file system.
  Typically, you should not use this class directly.
  
- @discussion The designated initializer for YYSDKVStorage is `initWithPath:type:`. 
+ @discussion The designated initializer for YYSDKVStorage is `initWithPath:type:`.
  After initialized, a directory is created based on the `path` to hold key-value data.
  Once initialized you should not read or write this directory without the instance.
  
@@ -119,7 +119,7 @@ typedef NS_ENUM(NSUInteger, YYSDKVStorageType) {
  
  If the `type` is YYSDKVStorageTypeFile, then the item.filename should not be empty.
  If the `type` is YYSDKVStorageTypeSQLite, then the item.filename will be ignored.
- It the `type` is YYSDKVStorageTypeMixed, then the item.value will be saved to file 
+ It the `type` is YYSDKVStorageTypeMixed, then the item.value will be saved to file
  system if the item.filename is not empty, otherwise it will be saved to sqlite.
  
  @param item  An item.

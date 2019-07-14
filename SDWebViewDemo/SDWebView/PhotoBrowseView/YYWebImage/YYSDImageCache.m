@@ -12,7 +12,8 @@
 #import "YYSDImageCache.h"
 #import "YYSDImage.h"
 #import "UIImage+YYSDWebImage.h"
-
+#import "YYSDMemoryCache.h"
+#import "YYSDDiskCache.h"
 #if __has_include(<YYSDImage/YYSDImage.h>)
 #import <YYSDImage/YYSDImage.h>
 #else

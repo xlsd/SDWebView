@@ -1,6 +1,6 @@
 //
 //  YYSDDiskCache.m
-//  YYSDCache <https://github.com/ibireme/YYSDCache>
+//  YYSDKit <https://github.com/ibireme/YYSDKit>
 //
 //  Created by ibireme on 15/2/11.
 //  Copyright (c) 2015 ibireme.
@@ -12,9 +12,9 @@
 #import "YYSDDiskCache.h"
 #import "YYSDKVStorage.h"
 #import <UIKit/UIKit.h>
-#import <CommonCrypto/CommonCrypto.h>
 #import <objc/runtime.h>
 #import <time.h>
+#import <CommonCrypto/CommonDigest.h>
 
 #define Lock() dispatch_semaphore_wait(self->_lock, DISPATCH_TIME_FOREVER)
 #define Unlock() dispatch_semaphore_signal(self->_lock)
@@ -22,7 +22,7 @@
 static const int extended_data_key;
 
 /// Free disk space in bytes.
-static int64_t _YYDiskSpaceFree() {
+static int64_t _YYSDDiskSpaceFree() {
     NSError *error = nil;
     NSDictionary *attrs = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:&error];
     if (error) return -1;
@@ -31,26 +31,12 @@ static int64_t _YYDiskSpaceFree() {
     return space;
 }
 
-/// String's md5 hash.
-static NSString *_YYNSStringMD5(NSString *string) {
-    if (!string) return nil;
-    NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
-    unsigned char result[CC_MD5_DIGEST_LENGTH];
-    CC_MD5(data.bytes, (CC_LONG)data.length, result);
-    return [NSString stringWithFormat:
-                @"%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
-                result[0],  result[1],  result[2],  result[3],
-                result[4],  result[5],  result[6],  result[7],
-                result[8],  result[9],  result[10], result[11],
-                result[12], result[13], result[14], result[15]
-            ];
-}
 
 /// weak reference for all instances
 static NSMapTable *_globalInstances;
 static dispatch_semaphore_t _globalInstancesLock;
 
-static void _YYDiskCacheInitGlobal() {
+static void _YYSDDiskCacheInitGlobal() {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _globalInstancesLock = dispatch_semaphore_create(1);
@@ -58,18 +44,18 @@ static void _YYDiskCacheInitGlobal() {
     });
 }
 
-static YYSDDiskCache *_YYDiskCacheGetGlobal(NSString *path) {
+static YYSDDiskCache *_YYSDDiskCacheGetGlobal(NSString *path) {
     if (path.length == 0) return nil;
-    _YYDiskCacheInitGlobal();
+    _YYSDDiskCacheInitGlobal();
     dispatch_semaphore_wait(_globalInstancesLock, DISPATCH_TIME_FOREVER);
     id cache = [_globalInstances objectForKey:path];
     dispatch_semaphore_signal(_globalInstancesLock);
     return cache;
 }
 
-static void _YYDiskCacheSetGlobal(YYSDDiskCache *cache) {
+static void _YYSDDiskCacheSetGlobal(YYSDDiskCache *cache) {
     if (cache.path.length == 0) return;
-    _YYDiskCacheInitGlobal();
+    _YYSDDiskCacheInitGlobal();
     dispatch_semaphore_wait(_globalInstancesLock, DISPATCH_TIME_FOREVER);
     [_globalInstances setObject:cache forKey:cache.path];
     dispatch_semaphore_signal(_globalInstancesLock);
@@ -134,7 +120,7 @@ static void _YYDiskCacheSetGlobal(YYSDDiskCache *cache) {
     if (targetFreeDiskSpace == 0) return;
     int64_t totalBytes = [_kv getItemsSize];
     if (totalBytes <= 0) return;
-    int64_t diskFreeBytes = _YYDiskSpaceFree();
+    int64_t diskFreeBytes = _YYSDDiskSpaceFree();
     if (diskFreeBytes < 0) return;
     int64_t needTrimBytes = targetFreeDiskSpace - diskFreeBytes;
     if (needTrimBytes <= 0) return;
@@ -146,7 +132,16 @@ static void _YYDiskCacheSetGlobal(YYSDDiskCache *cache) {
 - (NSString *)_filenameForKey:(NSString *)key {
     NSString *filename = nil;
     if (_customFileNameBlock) filename = _customFileNameBlock(key);
-    if (!filename) filename = _YYNSStringMD5(key);
+    if (!filename) {
+        const char *fooData = [key UTF8String];
+        unsigned char result[CC_MD5_DIGEST_LENGTH];
+        CC_MD5(fooData, (CC_LONG)strlen(fooData), result);
+        NSMutableString *saveResult = [NSMutableString string];
+        for (int i = 0; i < CC_MD5_DIGEST_LENGTH; i++) {
+            [saveResult appendFormat:@"%02x", result[i]];
+        }
+        filename = saveResult;
+    };
     return filename;
 }
 
@@ -176,7 +171,7 @@ static void _YYDiskCacheSetGlobal(YYSDDiskCache *cache) {
     self = [super init];
     if (!self) return nil;
     
-    YYSDDiskCache *globalCache = _YYDiskCacheGetGlobal(path);
+    YYSDDiskCache *globalCache = _YYSDDiskCacheGetGlobal(path);
     if (globalCache) return globalCache;
     
     YYSDKVStorageType type;
@@ -203,7 +198,7 @@ static void _YYDiskCacheSetGlobal(YYSDDiskCache *cache) {
     _autoTrimInterval = 60;
     
     [self _trimRecursively];
-    _YYDiskCacheSetGlobal(self);
+    _YYSDDiskCacheSetGlobal(self);
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_appWillBeTerminated) name:UIApplicationWillTerminateNotification object:nil];
     return self;
@@ -343,10 +338,7 @@ static void _YYDiskCacheSetGlobal(YYSDDiskCache *cache) {
             return;
         }
         Lock();
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wimplicit-retain-self"
         [_kv removeAllItemsWithProgressBlock:progress endBlock:end];
-#pragma clang diagnostic pop
         Unlock();
     });
 }

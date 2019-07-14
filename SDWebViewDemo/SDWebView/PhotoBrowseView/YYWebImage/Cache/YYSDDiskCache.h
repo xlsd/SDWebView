@@ -1,6 +1,6 @@
 //
 //  YYSDDiskCache.h
-//  YYSDCache <https://github.com/ibireme/YYSDCache>
+//  YYSDKit <https://github.com/ibireme/YYSDKit>
 //
 //  Created by ibireme on 15/2/11.
 //  Copyright (c) 2015 ibireme.

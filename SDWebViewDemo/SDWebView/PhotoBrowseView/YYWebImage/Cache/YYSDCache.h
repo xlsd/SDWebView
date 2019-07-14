@@ -1,6 +1,6 @@
 //
 //  YYSDCache.h
-//  YYSDCache <https://github.com/ibireme/YYSDCache>
+//  YYSDKit <https://github.com/ibireme/YYSDKit>
 //
 //  Created by ibireme on 15/2/13.
 //  Copyright (c) 2015 ibireme.
@@ -11,24 +11,9 @@
 
 #import <Foundation/Foundation.h>
 
-#if __has_include(<YYSDCache/YYSDCache.h>)
-FOUNDATION_EXPORT double YYSDCacheVersionNumber;
-FOUNDATION_EXPORT const unsigned char YYSDCacheVersionString[];
-#import <YYSDCache/YYSDMemoryCache.h>
-#import <YYSDCache/YYSDDiskCache.h>
-#import <YYSDCache/YYSDKVStorage.h>
-#elif __has_include(<YYSDWebImage/YYSDCache.h>)
-#import <YYSDWebImage/YYSDMemoryCache.h>
-#import <YYSDWebImage/YYSDDiskCache.h>
-#import <YYSDWebImage/YYSDKVStorage.h>
-#else
-#import "YYSDMemoryCache.h"
-#import "YYSDDiskCache.h"
-#import "YYSDKVStorage.h"
-#endif
+@class YYSDMemoryCache, YYSDDiskCache;
 
 NS_ASSUME_NONNULL_BEGIN
-
 
 /**
  `YYSDCache` is a thread safe key-value cache.

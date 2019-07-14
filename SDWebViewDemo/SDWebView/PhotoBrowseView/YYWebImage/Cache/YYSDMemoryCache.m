@@ -1,6 +1,6 @@
 //
 //  YYSDMemoryCache.m
-//  YYSDCache <https://github.com/ibireme/YYSDCache>
+//  YYSDKit <https://github.com/ibireme/YYSDKit>
 //
 //  Created by ibireme on 15/2/7.
 //  Copyright (c) 2015 ibireme.
@@ -15,19 +15,28 @@
 #import <QuartzCore/QuartzCore.h>
 #import <pthread.h>
 
+#if __has_include("YYSDDispatchQueuePool.h")
+#import "YYSDDispatchQueuePool.h"
+#endif
 
+#ifdef YYSDDispatchQueuePool_h
+static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
+    return YYSDDispatchQueueGetForQOS(NSQualityOfServiceUtility);
+}
+#else
 static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
     return dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
 }
+#endif
 
 /**
  A node in linked map.
  Typically, you should not use this class directly.
  */
-@interface _YYLinkedMapNode : NSObject {
+@interface _YYSDLinkedMapNode : NSObject {
     @package
-    __unsafe_unretained _YYLinkedMapNode *_prev; // retained by dic
-    __unsafe_unretained _YYLinkedMapNode *_next; // retained by dic
+    __unsafe_unretained _YYSDLinkedMapNode *_prev; // retained by dic
+    __unsafe_unretained _YYSDLinkedMapNode *_next; // retained by dic
     id _key;
     id _value;
     NSUInteger _cost;
@@ -35,7 +44,7 @@ static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
 }
 @end
 
-@implementation _YYLinkedMapNode
+@implementation _YYSDLinkedMapNode
 @end
 
 
@@ -45,38 +54,38 @@ static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
  
  Typically, you should not use this class directly.
  */
-@interface _YYLinkedMap : NSObject {
+@interface _YYSDLinkedMap : NSObject {
     @package
     CFMutableDictionaryRef _dic; // do not set object directly
     NSUInteger _totalCost;
     NSUInteger _totalCount;
-    _YYLinkedMapNode *_head; // MRU, do not change it directly
-    _YYLinkedMapNode *_tail; // LRU, do not change it directly
+    _YYSDLinkedMapNode *_head; // MRU, do not change it directly
+    _YYSDLinkedMapNode *_tail; // LRU, do not change it directly
     BOOL _releaseOnMainThread;
     BOOL _releaseAsynchronously;
 }
 
 /// Insert a node at head and update the total cost.
 /// Node and node.key should not be nil.
-- (void)insertNodeAtHead:(_YYLinkedMapNode *)node;
+- (void)insertNodeAtHead:(_YYSDLinkedMapNode *)node;
 
 /// Bring a inner node to header.
 /// Node should already inside the dic.
-- (void)bringNodeToHead:(_YYLinkedMapNode *)node;
+- (void)bringNodeToHead:(_YYSDLinkedMapNode *)node;
 
 /// Remove a inner node and update the total cost.
 /// Node should already inside the dic.
-- (void)removeNode:(_YYLinkedMapNode *)node;
+- (void)removeNode:(_YYSDLinkedMapNode *)node;
 
 /// Remove tail node if exist.
-- (_YYLinkedMapNode *)removeTailNode;
+- (_YYSDLinkedMapNode *)removeTailNode;
 
 /// Remove all node in background queue.
 - (void)removeAll;
 
 @end
 
-@implementation _YYLinkedMap
+@implementation _YYSDLinkedMap
 
 - (instancetype)init {
     self = [super init];
@@ -90,7 +99,7 @@ static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
     CFRelease(_dic);
 }
 
-- (void)insertNodeAtHead:(_YYLinkedMapNode *)node {
+- (void)insertNodeAtHead:(_YYSDLinkedMapNode *)node {
     CFDictionarySetValue(_dic, (__bridge const void *)(node->_key), (__bridge const void *)(node));
     _totalCost += node->_cost;
     _totalCount++;
@@ -103,7 +112,7 @@ static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
     }
 }
 
-- (void)bringNodeToHead:(_YYLinkedMapNode *)node {
+- (void)bringNodeToHead:(_YYSDLinkedMapNode *)node {
     if (_head == node) return;
     
     if (_tail == node) {
@@ -119,7 +128,7 @@ static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
     _head = node;
 }
 
-- (void)removeNode:(_YYLinkedMapNode *)node {
+- (void)removeNode:(_YYSDLinkedMapNode *)node {
     CFDictionaryRemoveValue(_dic, (__bridge const void *)(node->_key));
     _totalCost -= node->_cost;
     _totalCount--;
@@ -129,9 +138,9 @@ static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
     if (_tail == node) _tail = node->_prev;
 }
 
-- (_YYLinkedMapNode *)removeTailNode {
+- (_YYSDLinkedMapNode *)removeTailNode {
     if (!_tail) return nil;
-    _YYLinkedMapNode *tail = _tail;
+    _YYSDLinkedMapNode *tail = _tail;
     CFDictionaryRemoveValue(_dic, (__bridge const void *)(_tail->_key));
     _totalCost -= _tail->_cost;
     _totalCount--;
@@ -174,7 +183,7 @@ static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
 
 @implementation YYSDMemoryCache {
     pthread_mutex_t _lock;
-    _YYLinkedMap *_lru;
+    _YYSDLinkedMap *_lru;
     dispatch_queue_t _queue;
 }
 
@@ -212,7 +221,7 @@ static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
     while (!finish) {
         if (pthread_mutex_trylock(&_lock) == 0) {
             if (_lru->_totalCost > costLimit) {
-                _YYLinkedMapNode *node = [_lru removeTailNode];
+                _YYSDLinkedMapNode *node = [_lru removeTailNode];
                 if (node) [holder addObject:node];
             } else {
                 finish = YES;
@@ -246,7 +255,7 @@ static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
     while (!finish) {
         if (pthread_mutex_trylock(&_lock) == 0) {
             if (_lru->_totalCount > countLimit) {
-                _YYLinkedMapNode *node = [_lru removeTailNode];
+                _YYSDLinkedMapNode *node = [_lru removeTailNode];
                 if (node) [holder addObject:node];
             } else {
                 finish = YES;
@@ -281,7 +290,7 @@ static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
     while (!finish) {
         if (pthread_mutex_trylock(&_lock) == 0) {
             if (_lru->_tail && (now - _lru->_tail->_time) > ageLimit) {
-                _YYLinkedMapNode *node = [_lru removeTailNode];
+                _YYSDLinkedMapNode *node = [_lru removeTailNode];
                 if (node) [holder addObject:node];
             } else {
                 finish = YES;
@@ -322,7 +331,7 @@ static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
 - (instancetype)init {
     self = super.init;
     pthread_mutex_init(&_lock, NULL);
-    _lru = [_YYLinkedMap new];
+    _lru = [_YYSDLinkedMap new];
     _queue = dispatch_queue_create("com.ibireme.cache.memory", DISPATCH_QUEUE_SERIAL);
     
     _countLimit = NSUIntegerMax;
@@ -397,7 +406,7 @@ static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
 - (id)objectForKey:(id)key {
     if (!key) return nil;
     pthread_mutex_lock(&_lock);
-    _YYLinkedMapNode *node = CFDictionaryGetValue(_lru->_dic, (__bridge const void *)(key));
+    _YYSDLinkedMapNode *node = CFDictionaryGetValue(_lru->_dic, (__bridge const void *)(key));
     if (node) {
         node->_time = CACurrentMediaTime();
         [_lru bringNodeToHead:node];
@@ -417,7 +426,7 @@ static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
         return;
     }
     pthread_mutex_lock(&_lock);
-    _YYLinkedMapNode *node = CFDictionaryGetValue(_lru->_dic, (__bridge const void *)(key));
+    _YYSDLinkedMapNode *node = CFDictionaryGetValue(_lru->_dic, (__bridge const void *)(key));
     NSTimeInterval now = CACurrentMediaTime();
     if (node) {
         _lru->_totalCost -= node->_cost;
@@ -427,7 +436,7 @@ static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
         node->_value = object;
         [_lru bringNodeToHead:node];
     } else {
-        node = [_YYLinkedMapNode new];
+        node = [_YYSDLinkedMapNode new];
         node->_cost = cost;
         node->_time = now;
         node->_key = key;
@@ -436,11 +445,11 @@ static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
     }
     if (_lru->_totalCost > _costLimit) {
         dispatch_async(_queue, ^{
-            [self trimToCost:self->_costLimit];
+            [self trimToCost:_costLimit];
         });
     }
     if (_lru->_totalCount > _countLimit) {
-        _YYLinkedMapNode *node = [_lru removeTailNode];
+        _YYSDLinkedMapNode *node = [_lru removeTailNode];
         if (_lru->_releaseAsynchronously) {
             dispatch_queue_t queue = _lru->_releaseOnMainThread ? dispatch_get_main_queue() : YYSDMemoryCacheGetReleaseQueue();
             dispatch_async(queue, ^{
@@ -458,7 +467,7 @@ static inline dispatch_queue_t YYSDMemoryCacheGetReleaseQueue() {
 - (void)removeObjectForKey:(id)key {
     if (!key) return;
     pthread_mutex_lock(&_lock);
-    _YYLinkedMapNode *node = CFDictionaryGetValue(_lru->_dic, (__bridge const void *)(key));
+    _YYSDLinkedMapNode *node = CFDictionaryGetValue(_lru->_dic, (__bridge const void *)(key));
     if (node) {
         [_lru removeNode:node];
         if (_lru->_releaseAsynchronously) {
