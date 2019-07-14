@@ -56,9 +56,17 @@
 }
 
 - (void)setDefaultValue {
-    _displayHTML = YES;
-    _displayCookies = NO;
-    _displayURL = YES;
+    
+    if (self.isDebug) {
+        _displayHTML = YES;
+        _displayCookies = YES;
+        _displayURL = YES;
+    } else {
+        _displayHTML = NO;
+        _displayCookies = NO;
+        _displayURL = NO;
+    }
+    
     self.UIDelegate = self;
     self.navigationDelegate = self;
     self.allowsBackForwardNavigationGestures = YES;
